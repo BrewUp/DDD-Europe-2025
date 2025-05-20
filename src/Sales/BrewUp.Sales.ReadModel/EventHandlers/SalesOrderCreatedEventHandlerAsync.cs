@@ -10,15 +10,9 @@ public sealed class SalesOrderCreatedEventHandlerAsync(ILoggerFactory loggerFact
 {
 	public override async Task HandleAsync(SalesOrderCreated @event, CancellationToken cancellationToken = new())
 	{
-		try
-		{
-			await salesOrderService.CreateSalesOrderAsync(@event.SalesOrderId, @event.SalesOrderNumber, @event.CustomerId,
-				@event.CustomerName, @event.OrderDate, @event.Rows, cancellationToken);
-		}
-		catch (Exception ex)
-		{
-			Logger.LogError(ex, "Error handling sales order created event");
-			throw;
-		}
+		cancellationToken.ThrowIfCancellationRequested();
+		
+		await salesOrderService.CreateSalesOrderAsync(@event.SalesOrderId, @event.SalesOrderNumber, @event.CustomerId,
+			@event.CustomerName, @event.OrderDate, @event.Rows, cancellationToken);
 	}
 }

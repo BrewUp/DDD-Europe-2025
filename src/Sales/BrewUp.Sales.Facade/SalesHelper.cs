@@ -1,5 +1,6 @@
 ﻿using BrewUp.Infrastructure.RabbitMq;
 using BrewUp.Sales.Facade.Validators;
+using BrewUp.Sales.Infrastructures;
 using BrewUp.Sales.Infrastructures.MongoDb;
 using BrewUp.Sales.Infrastructures.RabbitMq;
 using BrewUp.Sales.ReadModel.Dtos;
