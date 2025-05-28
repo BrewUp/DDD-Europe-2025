@@ -12,7 +12,7 @@ public class BrewUpMediator(ISalesFacade salesFacade, IWarehousesFacade warehous
 	{
 		cancellationToken.ThrowIfCancellationRequested();
 
-		TemporalClient temporalClient = await TemporalClient.ConnectAsync(new TemporalClientConnectOptions("localhost:5098")
+		TemporalClient temporalClient = await TemporalClient.ConnectAsync(new TemporalClientConnectOptions("localhost:7233")
 		{
 			LoggerFactory = LoggerFactory.Create(builder =>
 				builder.
