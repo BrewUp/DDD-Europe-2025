@@ -12,6 +12,7 @@ public class BrewUpMediator(ISalesFacade salesFacade, IWarehousesFacade warehous
 	{
 		cancellationToken.ThrowIfCancellationRequested();
 
+		// Create a client to localhost on "default" namespace
 		TemporalClient temporalClient = await TemporalClient.ConnectAsync(new TemporalClientConnectOptions("localhost:7233")
 		{
 			LoggerFactory = LoggerFactory.Create(builder =>
@@ -26,7 +27,7 @@ public class BrewUpMediator(ISalesFacade salesFacade, IWarehousesFacade warehous
 			{
 				Id = $"sales-order-workflow-{body.SalesOrderNumber}",
 				TaskQueue = "sales-order-task-queue",
-			});
+			}).ConfigureAwait(false);
 
 		return result.OrderId;
 	}

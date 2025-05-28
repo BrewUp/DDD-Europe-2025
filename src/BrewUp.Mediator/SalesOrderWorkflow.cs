@@ -30,23 +30,27 @@ public class SalesOrderWorkflow
         {
             var availability = await Workflow.ExecuteActivityAsync(
                 (SalesOrderActivities activity) => activity.GetBeerAvailabilityAsync(warehouseFacade, row.BeerId, cancellationToken),
-                options);
+                options).ConfigureAwait(false);
             
             if (availability.TotalRecords > 0)
                 availabilities.Add(availability.Results.First());
         }
+        
+        if (availabilities.Count == 0)
+            throw new ApplicationFailureException("No beer available for sale");
         
         // Prepare the list of rows that are available for sale
         List<SalesOrderRowJson> rowsForSale = (from row in salesOrder.Rows
             let beerAvailability = availabilities.Find(a => a.BeerId == row.BeerId.ToString())
             where beerAvailability != null && beerAvailability.Availability.Available >= row.Quantity.Value
             select row).ToList();
-
-        if (rowsForSale.Count == 0)
-            throw new ApplicationFailureException("No beer available for sale");
         
         salesOrder = salesOrder with { Rows = rowsForSale };
-        var orderId = await Workflow.ExecuteActivityAsync((SalesOrderActivities activity) => activity.CreateOrderAsync(salesFacade, salesOrder, cancellationToken), options);
+        var orderId = await Workflow
+            .ExecuteActivityAsync(
+                (SalesOrderActivities activity) =>
+                    activity.CreateOrderAsync(salesFacade, salesOrder, cancellationToken), options)
+            .ConfigureAwait(false);
 
         return new OrderConfirmation(
             orderId,
