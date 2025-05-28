@@ -6,13 +6,13 @@ namespace BrewUp.Rest.Modules;
 
 public sealed class HealthModule : IModule
 {
-	public bool IsEnabled => true;
+	public bool IsEnabled => false;
 	public int Order => 10;
 
 	public IServiceCollection Register(WebApplicationBuilder builder)
 	{
-		builder.Services.AddHealthChecks()
-			.AddMongoDb(builder.Configuration["BrewUp:MongoDbSettings:ConnectionString"]!, name: "MongoDB", failureStatus: HealthStatus.Unhealthy);
+		// builder.Services.AddHealthChecks()
+		// 	.AddMongoDb(builder.Configuration["BrewUp:MongoDbSettings:ConnectionString"]!, name: "MongoDB", failureStatus: HealthStatus.Unhealthy);
 
 		return builder.Services;
 	}
