@@ -35,7 +35,7 @@ public class SalesOrder : EntityBase
 		};
 	}
 
-	public SalesOrderJson ToJson() =>	new(Id, SalesOrderNumber, CustomerId, CustomerName, OrderDate, Rows.Select(r => r.ToJson()));
+	public SalesOrderJson ToJson() =>	new(Id, SalesOrderNumber, CustomerId, CustomerName, OrderDate, "Open", Rows.Select(r => r.ToJson()));
 
 }
 
