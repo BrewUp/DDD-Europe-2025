@@ -1,4 +1,4 @@
-﻿using BrewUp.DomainModel.Services;
+﻿using BrewUp.Persistence.Services;
 using BrewUp.Shared.Contracts;
 using BrewUp.Shared.CustomTypes;
 using Microsoft.AspNetCore.Http.HttpResults;

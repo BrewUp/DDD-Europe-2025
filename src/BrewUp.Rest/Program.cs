@@ -1,10 +1,10 @@
-using BrewUp.DomainModel.Services;
 using BrewUp.Infrastructure.MongoDb;
-using BrewUp.ReadModel;
-using BrewUp.ReadModel.Sales.Queries;
-using BrewUp.ReadModel.Sales.Services;
-using BrewUp.ReadModel.Warehouses.Queries;
-using BrewUp.ReadModel.Warehouses.Services;
+using BrewUp.Persistence;
+using BrewUp.Persistence.Sales.Queries;
+using BrewUp.Persistence.Sales.Services;
+using BrewUp.Persistence.Services;
+using BrewUp.Persistence.Warehouses.Queries;
+using BrewUp.Persistence.Warehouses.Services;
 using BrewUp.Rest.Services;
 using BrewUp.Rest.Validators.Warehouses;
 using BrewUp.Shared.Entities;
@@ -12,6 +12,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using SalesOrderService = BrewUp.Persistence.Services.SalesOrderService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,13 +38,13 @@ builder.Services.AddKeyedScoped<IRepository, SaleRepository>("sale");
 builder.Services.AddKeyedScoped<IRepository, WarehouseRepository>("warehouse");
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddScoped<ISalesOrderService, BrewUp.DomainModel.Services.SalesOrderService>();
+builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
 builder.Services.AddScoped<ISalesQueryService, SalesQueryService>();
 builder.Services.AddScoped<IQueries<SalesOrder>, SalesOrderQueries>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<SetAvailabilityValidator>();
 builder.Services.AddSingleton<ValidationHandler>();
-builder.Services.AddScoped<IWarehouseService, BrewUp.DomainModel.Services.WarehouseService>();
+builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IAvailabilityQueryService, AvailabilityQueryService>();
 builder.Services.AddScoped<IQueries<Availability>, AvailabilityQueries>();
 

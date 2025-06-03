@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewUp.DomainModel", "BrewUp.DomainModel\BrewUp.DomainModel.csproj", "{230E8A74-C25D-4348-8C16-A25AFFB07E78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewUp.Persistence", "BrewUp.Persistence\BrewUp.Persistence.csproj", "{230E8A74-C25D-4348-8C16-A25AFFB07E78}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewUp.Infrastructure", "BrewUp.Infrastructure\BrewUp.Infrastructure.csproj", "{15C8FA3A-2A24-4F9B-A0B2-ED8955256B4C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewUp.ReadModel", "BrewUp.ReadModel\BrewUp.ReadModel.csproj", "{BDDDD969-8F3D-455F-977B-6402252EBD11}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewUp.Rest", "BrewUp.Rest\BrewUp.Rest.csproj", "{0E0D8289-C585-46CF-8FEE-B26749767F72}"
 EndProject
@@ -29,10 +27,6 @@ Global
 		{15C8FA3A-2A24-4F9B-A0B2-ED8955256B4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15C8FA3A-2A24-4F9B-A0B2-ED8955256B4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15C8FA3A-2A24-4F9B-A0B2-ED8955256B4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BDDDD969-8F3D-455F-977B-6402252EBD11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BDDDD969-8F3D-455F-977B-6402252EBD11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BDDDD969-8F3D-455F-977B-6402252EBD11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BDDDD969-8F3D-455F-977B-6402252EBD11}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E0D8289-C585-46CF-8FEE-B26749767F72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E0D8289-C585-46CF-8FEE-B26749767F72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E0D8289-C585-46CF-8FEE-B26749767F72}.Release|Any CPU.ActiveCfg = Release|Any CPU
