@@ -19,25 +19,6 @@ public sealed class SalesFacade(IServiceBus serviceBus,
 		if (body.SalesOrderId.Equals(string.Empty))
 			body = body with { SalesOrderId = Guid.NewGuid().ToString() };
 
-		IEnumerable<SalesOrderRowDto> beersAvailable = [];
-		foreach (var row in body.Rows)
-		{
-			var availability = await availabilityQueries.GetByIdAsync(row.BeerId.ToString(), cancellationToken);
-			if (availability.Quantity.Value >= row.Quantity.Value)
-			{
-				beersAvailable = beersAvailable.Append(new SalesOrderRowDto
-				{
-					BeerId = row.BeerId,
-					BeerName = row.BeerName,
-					Price = row.Price,
-					Quantity = availability.Quantity
-				});
-			}
-		}
-		
-		if (beersAvailable.Count() != body.Rows.Count())
-			throw new InvalidOperationException("Not all beers are available");
-
 		CreateSalesOrder command = new(new SalesOrderId(new Guid(body.SalesOrderId)),
 						Guid.NewGuid(), new SalesOrderNumber(body.SalesOrderNumber), new OrderDate(body.OrderDate),
 									new CustomerId(body.CustomerId), new CustomerName(body.CustomerName), body.Rows);

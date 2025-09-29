@@ -16,6 +16,8 @@ public class SalesOrder : AggregateRoot
 	internal CustomerId _customerId;
 	internal CustomerName _customerName;
 
+	internal string _state;
+
 	internal IEnumerable<SalesOrderRow> _rows;
 
 	protected SalesOrder()
@@ -44,5 +46,27 @@ public class SalesOrder : AggregateRoot
 		_customerId = @event.CustomerId;
 		_customerName = @event.CustomerName;
 		_rows = @event.Rows.MapToDomainRows();
+		
+		_state = "Created";
+	}
+
+	internal void PrepareSalesOrder()
+	{
+		RaiseEvent(new SalesOrderPrepared((SalesOrderId)Id, Guid.NewGuid()));
+	}
+
+	private void Apply(SalesOrderPrepared @event)
+	{
+		_state = "Prepared";
+	}
+	
+	internal void CloseSalesOrder()
+	{
+		RaiseEvent(new SalesOrderClosed((SalesOrderId)Id, Guid.NewGuid()));
+	}
+
+	private void Apply(SalesOrderClosed @event)
+	{
+		_state = "Closed";
 	}
 }

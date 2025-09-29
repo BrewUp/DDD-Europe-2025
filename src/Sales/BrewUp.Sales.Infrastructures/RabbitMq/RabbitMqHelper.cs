@@ -24,10 +24,14 @@ public static class RabbitMqHelper
 		services.AddMufloneTransportRabbitMQ(loggerFactory, rabbitMqConfiguration);
 		
 		services.AddCommandHandler<CreateSalesOrderCommandHandler>();
+		services.AddCommandHandler<PrepareSalesOrderCommandHandler>();
+		services.AddCommandHandler<CloseSalesOrderCommandHandler>();
 		services.AddCommandHandler<UpdateAvailabilityDueToWarehousesNotificationCommandHandler>();
 
 		services.AddDomainEventHandler<AvailabilityUpdatedDueToWarehousesNotificationEventHandler>();
 		services.AddDomainEventHandler<SalesOrderCreatedEventHandlerAsync>();
+		services.AddDomainEventHandler<SalesOrderCreatedForPrepareEventHandlerAsync>();
+		services.AddDomainEventHandler<SalesOrderPreparedEventHandler>();
 		services.AddIntegrationEventHandler<AvailabilityUpdatedForNotificationEventHandler>();
 
 		return services;
