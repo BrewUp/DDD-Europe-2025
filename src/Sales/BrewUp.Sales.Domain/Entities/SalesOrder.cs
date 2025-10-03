@@ -34,7 +34,8 @@ public class SalesOrder : AggregateRoot
 
 	private SalesOrder(SalesOrderId salesOrderId, Guid correlationId, SalesOrderNumber salesOrderNumber, OrderDate orderDate,
 		CustomerId customerId, CustomerName customerName, IEnumerable<SalesOrderRowDto> rows)
-	{		
+	{
+		// Business logic here
 		RaiseEvent(new SalesOrderCreated(salesOrderId, correlationId, salesOrderNumber, orderDate, customerId, customerName, rows));
 	}
 
@@ -52,6 +53,7 @@ public class SalesOrder : AggregateRoot
 
 	internal void PrepareSalesOrder()
 	{
+		// Business logic here
 		RaiseEvent(new SalesOrderPrepared((SalesOrderId)Id, Guid.NewGuid()));
 	}
 
@@ -62,6 +64,7 @@ public class SalesOrder : AggregateRoot
 	
 	internal void CloseSalesOrder()
 	{
+		// Business logic here
 		RaiseEvent(new SalesOrderClosed((SalesOrderId)Id, Guid.NewGuid()));
 	}
 
