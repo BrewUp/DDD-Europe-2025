@@ -1,10 +1,9 @@
 ﻿using BrewUp.Shared.Contracts;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Sales.Services
+namespace BrewUp.Persistence.Sales.Services;
+
+public interface ISalesQueryService
 {
-	public interface ISalesQueryService
-	{
-		Task<PagedResult<SalesOrderJson>> GetSalesOrdersAsync(int page, int pageSize, CancellationToken cancellationToken);
-	}
+    Task<PagedResult<SalesOrderJson>> GetSalesOrdersAsync(int page, int pageSize, CancellationToken cancellationToken);
 }

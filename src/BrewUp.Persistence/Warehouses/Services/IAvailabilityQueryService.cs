@@ -1,10 +1,9 @@
 ﻿using BrewUp.Shared.Contracts;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Warehouses.Services
+namespace BrewUp.Persistence.Warehouses.Services;
+
+public interface IAvailabilityQueryService
 {
-	public interface IAvailabilityQueryService
-	{
-		Task<PagedResult<BeerAvailabilityJson>> GetAvailabilityAsync(Guid beerId, CancellationToken cancellationToken);
-	}
+    Task<PagedResult<BeerAvailabilityJson>> GetAvailabilityAsync(Guid beerId, CancellationToken cancellationToken);
 }
