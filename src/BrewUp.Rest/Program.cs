@@ -15,6 +15,7 @@ using Serilog;
 using SalesOrderService = BrewUp.Persistence.Services.SalesOrderService;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
 
 // Register Modules
 builder.Services.AddCors(options => { options.AddPolicy("CorsPolicy", corsBuilder => corsBuilder.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader()); });
@@ -48,21 +49,11 @@ builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IAvailabilityQueryService, AvailabilityQueryService>();
 builder.Services.AddScoped<IQueries<Availability>, AvailabilityQueries>();
 
+
 var app = builder.Build();
+app.MapControllers();
 
 app.UseCors("CorsPolicy");
-
-//Sales
-var salesGroup = app.MapGroup("/v1/sales/").WithTags("Sales");
-salesGroup.MapPost("/", BrewUp.Rest.Services.SalesOrderService.HandleCreateSalesOrder)
-	.Produces(StatusCodes.Status400BadRequest)
-	.Produces(StatusCodes.Status201Created)
-	.WithName("CreateSalesOrder");
-
-salesGroup.MapGet("/", BrewUp.Rest.Services.SalesOrderService.HandleGetOrders)
-	.Produces(StatusCodes.Status404NotFound)
-	.Produces(StatusCodes.Status200OK)
-	.WithName("GetSalesOrders");
 
 //Warehouses
 var warehousesGroup = app.MapGroup("/v1/warehouses/").WithTags("Warehouses");
