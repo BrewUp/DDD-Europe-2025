@@ -8,12 +8,12 @@ public static class DomainHelper
 {
     internal static SalesOrderRow MapToDomainRow(this SalesOrderRowJson json)
     {
-        return SalesOrderRow.CreateSalesOrderRow(json.BeerId, new BeerName(json.BeerName), json.Quantity, json.Price);
+        return SalesOrderRow.CreateSalesOrderRow(json.BeerId, json.BeerName, json.Quantity, json.Price);
     }
 
     internal static IEnumerable<SalesOrderRow> MapToDomainRows(this IEnumerable<SalesOrderRowJson> json)
     {
-        return json.Select(r => SalesOrderRow.CreateSalesOrderRow(r.BeerId, new BeerName(r.BeerName), r.Quantity, r.Price));
+        return json.Select(r => SalesOrderRow.CreateSalesOrderRow(r.BeerId, r.BeerName, r.Quantity, r.Price));
     }
 
     internal static Shared.Entities.SalesOrder MapToSharedDto(this Entities.Sales.SalesOrder salesOrder)
@@ -23,7 +23,7 @@ public static class DomainHelper
             salesOrder.Rows.Select(r => new SalesOrderRowJson
             {
                 BeerId = r.BeerId,
-                BeerName = r.BeerName.Value,
+                BeerName = r.BeerName,
                 Quantity = r.Quantity,
                 Price = r.BeerPrice
             }));
