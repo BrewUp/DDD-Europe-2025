@@ -5,7 +5,7 @@ namespace BrewUp.Persistence.Entities.Warehouses;
 
 public class Availability : AggregateRoot
 {
-    internal BeerId BeerId = default!;
+    internal Guid BeerId = default!;
     internal BeerName BeerName = default!;
     internal Quantity Quantity = default!;
 
@@ -13,14 +13,14 @@ public class Availability : AggregateRoot
     {
     }
 
-    internal static Availability CreateAvailability(BeerId beerId, BeerName beerName, Quantity quantity)
+    internal static Availability CreateAvailability(Guid beerId, BeerName beerName, Quantity quantity)
     {
         return new Availability(beerId, beerName, quantity);
     }
 
-    private Availability(BeerId beerId, BeerName beerName, Quantity quantity)
+    private Availability(Guid beerId, BeerName beerName, Quantity quantity)
     {
-        Id = beerId.Value.ToString();
+        Id = beerId.ToString();
 
         BeerId = beerId;
         BeerName = beerName;

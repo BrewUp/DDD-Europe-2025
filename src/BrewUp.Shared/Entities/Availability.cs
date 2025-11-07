@@ -14,9 +14,9 @@ public class Availability : EntityBase
     {
     }
 
-    public static Availability Create(BeerId beerId, BeerName beerName, Quantity quantity)
+    public static Availability Create(Guid beerId, BeerName beerName, Quantity quantity)
     {
-        return new Availability(beerId.Value.ToString(), beerName.Value, quantity);
+        return new Availability(beerId.ToString(), beerName.Value, quantity);
     }
 
     private Availability(string beerId, string beerName, Quantity quantity)
