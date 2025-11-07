@@ -9,16 +9,16 @@ public sealed class SalesOrderQueries(IMongoClient mongoClient) : IQueries<Sales
 {
     private readonly IMongoDatabase _database = mongoClient.GetDatabase("Sales");
 
-    public async Task<SalesOrder> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<SalesOrder> GetByIdAsync(string id)
     {
         var collection = _database.GetCollection<SalesOrder>(nameof(SalesOrder));
         var filter = Builders<SalesOrder>.Filter.Eq("_id", id);
-        return (await collection.CountDocumentsAsync(filter, cancellationToken: cancellationToken) > 0
-            ? (await collection.FindAsync(filter, cancellationToken: cancellationToken).ConfigureAwait(false)).First()
+        return (await collection.CountDocumentsAsync(filter) > 0
+            ? (await collection.FindAsync(filter).ConfigureAwait(false)).First()
             : null)!;
     }
 
-    public async Task<PagedResult<SalesOrder>> GetByFilterAsync(Expression<Func<SalesOrder, bool>>? query, int page, int pageSize, CancellationToken cancellationToken)
+    public async Task<PagedResult<SalesOrder>> GetByFilterAsync(Expression<Func<SalesOrder, bool>>? query, int page, int pageSize)
     {
         if (--page < 0)
             page = 0;
@@ -28,8 +28,8 @@ public sealed class SalesOrderQueries(IMongoClient mongoClient) : IQueries<Sales
             ? collection.AsQueryable().Where(query)
             : collection.AsQueryable();
 
-        var count = await queryable.CountAsync(cancellationToken: cancellationToken);
-        var results = await queryable.Skip(page * pageSize).Take(pageSize).ToListAsync(cancellationToken: cancellationToken);
+        var count = await queryable.CountAsync();
+        var results = await queryable.Skip(page * pageSize).Take(pageSize).ToListAsync();
 
         return new PagedResult<SalesOrder>(results, page, pageSize, count);
     }

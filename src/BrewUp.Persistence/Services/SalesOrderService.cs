@@ -9,18 +9,18 @@ public sealed class SalesOrderService(
     [FromKeyedServices("warehouse")] IRepository warehouseRepository) : ISalesOrderService
 {
     public async Task CreateSalesOrderAsync(Guid salesOrderId, string salesOrderNumber, DateTime orderDate,
-        Guid customerId, string customerName, IEnumerable<SalesOrderRowJson> rows, CancellationToken cancellationToken)
+        Guid customerId, string customerName, IEnumerable<SalesOrderRowJson> rows)
     {
         List<SalesOrderRowJson> beersAvailable = new();
         foreach (var row in rows)
         {
-            var availability = await warehouseRepository.GetByIdAsync<Shared.Entities.Availability>(row.BeerId.ToString(), cancellationToken);
+            var availability = await warehouseRepository.GetByIdAsync<Shared.Entities.Availability>(row.BeerId.ToString());
             if (availability != null)
                 beersAvailable.Add(row);
         }
 
         var aggregate = SalesOrder.CreateSalesOrder(salesOrderId, salesOrderNumber, orderDate, customerId, customerName, beersAvailable);
 
-        await saleRepository.InsertAsync(aggregate.MapToSharedDto(), cancellationToken);
+        await saleRepository.InsertAsync(aggregate.MapToSharedDto());
     }
 }
