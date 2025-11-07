@@ -15,7 +15,7 @@ public class WarehouseTests (AppHttpClientFixture integrationFixture)
     [Fact]
     public async Task Can_HandleSetAvailabilities()
     {
-        SetAvailabilityJson body = new ("beerid", "beername", new Quantity(12, "bottles"));
+        SetAvailabilityJson body = new ("fd23d06e-e5eb-4ecc-93a6-516caf4a08b8", "beername", new Quantity(12, "bottles"));
         
         var stringJson = JsonSerializer.Serialize(body);
         var httpContent = new StringContent(stringJson, Encoding.UTF8, "application/json");

@@ -1,21 +1,21 @@
 ﻿using System.Linq.Expressions;
+using BrewUp.Persistence.Services;
 using BrewUp.Shared.Entities;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 
 namespace BrewUp.Persistence.Warehouses.Queries;
 
-public sealed class AvailabilityQueries(IMongoClient mongoClient) : IQueries<Availability>
+public sealed class AvailabilityQueries : IQueries<Availability>
 {
-    private readonly IMongoDatabase _database = mongoClient.GetDatabase("Sales");
-
     public async Task<Availability> GetByIdAsync(string id)
     {
-        var collection = _database.GetCollection<Availability>(nameof(Availability));
-        var filter = Builders<Availability>.Filter.Eq("_id", id);
-        return (await collection.CountDocumentsAsync(filter) > 0
-            ? (await collection.FindAsync(filter).ConfigureAwait(false)).First()
-            : null)!;
+        string filePath = $"{IRepository.DbRoot}/warehouse-entity-{id}.json";
+        if (!File.Exists(filePath))
+        {
+            return null;
+        }
+
+        string jsonString = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
+        return jsonString.Deserialized<Availability>();
     }
 
     public async Task<PagedResult<Availability>> GetByFilterAsync(Expression<Func<Availability, bool>>? query, int page, int pageSize)
@@ -23,13 +23,27 @@ public sealed class AvailabilityQueries(IMongoClient mongoClient) : IQueries<Ava
         if (--page < 0)
             page = 0;
 
-        var collection = _database.GetCollection<Availability>(nameof(Availability));
-        var queryable = query != null
-            ? collection.AsQueryable().Where(query)
-            : collection.AsQueryable();
+        var files = Directory.GetFiles(IRepository.DbRoot, "warehouse-entity-*.json");
 
-        var count = await queryable.CountAsync();
-        var results = await queryable.Skip(page * pageSize).Take(pageSize).ToListAsync();
+        List<Task<Availability>> allOrdersT = files.Select(async filePath =>
+        {
+            string json = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
+            var order = json.Deserialized<Availability>();
+            return order;
+        }).ToList();
+
+        var allOrders = (await Task.WhenAll(allOrdersT).ConfigureAwait(false)).ToList();
+
+        var queryable = allOrders.AsQueryable();
+
+        if (query != null)
+            queryable = queryable.Where(query);
+
+        var count = queryable.Count();
+        var results = queryable
+            .Skip(page * pageSize)
+            .Take(pageSize)
+            .ToList();
 
         return new PagedResult<Availability>(results, page, pageSize, count);
     }

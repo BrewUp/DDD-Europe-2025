@@ -1,4 +1,4 @@
-using BrewUp.Infrastructure.MongoDb;
+using BrewUp.Infrastructure.TextBasedDb;
 using BrewUp.Persistence;
 using BrewUp.Persistence.Sales.Queries;
 using BrewUp.Persistence.Sales.Services;
@@ -32,8 +32,7 @@ builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc("v1", new OpenApiInfo()
 	}
 }));
 
-builder.Services.AddMongoDb(builder.Configuration.GetSection("BrewUp:MongoDbSettings").Get<MongoDbSettings>()!);
-
+builder.Services.AddFileBasedDb();
 builder.Services.AddKeyedScoped<IRepository, SaleRepository>("sale");
 builder.Services.AddKeyedScoped<IRepository, WarehouseRepository>("warehouse");
 
@@ -47,7 +46,6 @@ builder.Services.AddSingleton<ValidationHandler>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IAvailabilityQueryService, AvailabilityQueryService>();
 builder.Services.AddScoped<IQueries<Availability>, AvailabilityQueries>();
-
 
 var app = builder.Build();
 app.MapControllers();
