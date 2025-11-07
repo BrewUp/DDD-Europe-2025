@@ -5,9 +5,8 @@ using BrewUp.Persistence.Sales.Services;
 using BrewUp.Persistence.Services;
 using BrewUp.Persistence.Warehouses.Queries;
 using BrewUp.Persistence.Warehouses.Services;
-using BrewUp.Rest.Services;
-using BrewUp.Rest.Validators.Warehouses;
 using BrewUp.Shared.Entities;
+using BrewUp.Rest.Validators.Warehouses;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
@@ -54,13 +53,6 @@ var app = builder.Build();
 app.MapControllers();
 
 app.UseCors("CorsPolicy");
-
-//Warehouses
-var warehousesGroup = app.MapGroup("/v1/warehouses/").WithTags("Warehouses");
-warehousesGroup.MapPost("/availabilities", WarehousesService.HandleSetAvailabilities)
-	.Produces(StatusCodes.Status400BadRequest)
-	.Produces(StatusCodes.Status200OK)
-	.WithName("SetAvailabilities");
 
 // Configure the HTTP request pipeline.
 app.UseSwagger(s =>
