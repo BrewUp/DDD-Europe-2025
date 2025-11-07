@@ -1,7 +1,6 @@
 ﻿using BrewUp.Persistence.Sales.Services;
 using BrewUp.Persistence.Services;
 using BrewUp.Shared.Contracts;
-using BrewUp.Shared.CustomTypes;
 using BrewUp.Shared.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -11,9 +10,9 @@ public static class SalesOrderService
 {
 	public static async Task<Results<Created, NotFound>> HandleCreateSalesOrder(ISalesOrderService salesOrderService, SalesOrderJson body, CancellationToken cancellationToken)
 	{
-		await salesOrderService.CreateSalesOrderAsync(new SalesOrderId(new Guid(body.SalesOrderId)),
-			new SalesOrderNumber(body.SalesOrderNumber), new OrderDate(body.OrderDate),
-			new CustomerId(body.CustomerId), new CustomerName(body.CustomerName),
+		await salesOrderService.CreateSalesOrderAsync(new Guid(body.SalesOrderId),
+			body.SalesOrderNumber, body.OrderDate,
+			body.CustomerId, body.CustomerName,
 			body.Rows, cancellationToken);
 
 		return TypedResults.Created($"v1/sales/{body.SalesOrderId}");

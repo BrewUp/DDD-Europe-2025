@@ -1,6 +1,5 @@
 ﻿using BrewUp.Persistence.Entities.Sales;
 using BrewUp.Shared.Contracts;
-using BrewUp.Shared.CustomTypes;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BrewUp.Persistence.Services;
@@ -9,8 +8,8 @@ public sealed class SalesOrderService(
     [FromKeyedServices("sale")] IRepository saleRepository,
     [FromKeyedServices("warehouse")] IRepository warehouseRepository) : ISalesOrderService
 {
-    public async Task CreateSalesOrderAsync(SalesOrderId salesOrderId, SalesOrderNumber salesOrderNumber, OrderDate orderDate,
-        CustomerId customerId, CustomerName customerName, IEnumerable<SalesOrderRowJson> rows, CancellationToken cancellationToken)
+    public async Task CreateSalesOrderAsync(Guid salesOrderId, string salesOrderNumber, DateTime orderDate,
+        Guid customerId, string customerName, IEnumerable<SalesOrderRowJson> rows, CancellationToken cancellationToken)
     {
         List<SalesOrderRowJson> beersAvailable = new();
         foreach (var row in rows)

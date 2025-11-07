@@ -1,6 +1,5 @@
 ﻿using BrewUp.Persistence.Services;
 using BrewUp.Shared.Contracts;
-using BrewUp.Shared.CustomTypes;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BrewUp.Rest.Services;
