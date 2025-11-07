@@ -18,19 +18,19 @@ public static class DomainHelper
 
     internal static Shared.Entities.SalesOrder MapToSharedDto(this Entities.Sales.SalesOrder salesOrder)
     {
-        return Shared.Entities.SalesOrder.Create(salesOrder._salesOrderId, salesOrder._salesOrderNumber,
-            salesOrder._orderDate, salesOrder._customerId, salesOrder._customerName,
-            salesOrder._rows.Select(r => new SalesOrderRowJson
+        return Shared.Entities.SalesOrder.Create(salesOrder.SalesOrderId, salesOrder.SalesOrderNumber,
+            salesOrder.OrderDate, salesOrder.CustomerId, salesOrder.CustomerName,
+            salesOrder.Rows.Select(r => new SalesOrderRowJson
             {
-                BeerId = r._beerId.Value,
-                BeerName = r._beerName.Value,
-                Quantity = r._quantity,
-                Price = r._beerPrice
+                BeerId = r.BeerId.Value,
+                BeerName = r.BeerName.Value,
+                Quantity = r.Quantity,
+                Price = r.BeerPrice
             }));
     }
 
     internal static Shared.Entities.Availability MapToSharedDto(this Entities.Warehouses.Availability availability)
     {
-        return Shared.Entities.Availability.Create(availability._beerId, availability._beerName, availability._quantity);
+        return Shared.Entities.Availability.Create(availability.BeerId, availability.BeerName, availability.Quantity);
     }
 }

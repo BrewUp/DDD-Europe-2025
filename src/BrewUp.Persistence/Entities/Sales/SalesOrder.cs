@@ -6,14 +6,14 @@ namespace BrewUp.Persistence.Entities.Sales;
 
 public class SalesOrder : AggregateRoot
 {
-    internal readonly SalesOrderId _salesOrderId = default!;
-    internal readonly SalesOrderNumber _salesOrderNumber = default!;
-    internal readonly OrderDate _orderDate = default!;
+    internal readonly SalesOrderId SalesOrderId = default!;
+    internal readonly SalesOrderNumber SalesOrderNumber = default!;
+    internal readonly OrderDate OrderDate = default!;
 
-    internal readonly CustomerId _customerId = default!;
-    internal readonly CustomerName _customerName = default!;
+    internal readonly CustomerId CustomerId = default!;
+    internal readonly CustomerName CustomerName = default!;
 
-    internal readonly IEnumerable<SalesOrderRow> _rows = Enumerable.Empty<SalesOrderRow>();
+    internal readonly IEnumerable<SalesOrderRow> Rows = Enumerable.Empty<SalesOrderRow>();
 
     protected SalesOrder()
     {
@@ -28,13 +28,13 @@ public class SalesOrder : AggregateRoot
     private SalesOrder(SalesOrderId salesOrderId, SalesOrderNumber salesOrderNumber, OrderDate orderDate,
         CustomerId customerId, CustomerName customerName, IEnumerable<SalesOrderRow> row)
     {
-        _salesOrderId = salesOrderId;
-        _salesOrderNumber = salesOrderNumber;
-        _orderDate = orderDate;
+        SalesOrderId = salesOrderId;
+        SalesOrderNumber = salesOrderNumber;
+        OrderDate = orderDate;
 
-        _customerId = customerId;
-        _customerName = customerName;
+        CustomerId = customerId;
+        CustomerName = customerName;
 
-        _rows = row;
+        Rows = row;
     }
 }
