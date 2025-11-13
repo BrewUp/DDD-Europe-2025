@@ -22,27 +22,42 @@ public class SalesOrderController
         _salesQueryService = salesQueryService;
     }
 
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ActionName("CreateSalesOrder")]
-	public async Task<Results<Created, NotFound>> HandleCreateSalesOrder(SalesOrderJson body)
-	{
-		await _salesOrderService.CreateSalesOrderAsync(new Guid(body.SalesOrderId),
-			body.SalesOrderNumber, body.OrderDate,
-			body.CustomerId, body.CustomerName,
-			body.Rows);
-
-		return TypedResults.Created($"v1/sales/{body.SalesOrderId}");
-	}
+    //    [HttpPost]
+    //    [ProducesResponseType(StatusCodes.Status201Created)]
+    //    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //    [ActionName("CreateSalesOrder")]
+    // public async Task<Results<Created, NotFound>> HandleCreateSalesOrder(SalesOrderJson body)
+    // {
+    // 	await _salesOrderService.CreateSalesOrderAsync(new Guid(body.SalesOrderId),
+    // 		body.SalesOrderNumber, body.OrderDate,
+    // 		body.CustomerId, body.CustomerName,
+    // 		body.Rows);
+    //
+    // 	return TypedResults.Created($"v1/sales/{body.SalesOrderId}");
+    // }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ActionName("GetSalesOrders")]
-	public async Task<Results<Ok<PagedResult<SalesOrderJson>>, NotFound>> HandleGetOrders()
-	{
-		var orders = await _salesQueryService.GetSalesOrdersAsync(0, 30);
-		return TypedResults.Ok(orders);
-	}
+    public async Task<Results<Ok<PagedResult<SalesOrderJson>>, NotFound>> HandleGetOrders()
+    {
+        var orders = await _salesQueryService.GetSalesOrdersAsync(0, 30);
+        return TypedResults.Ok(orders);
+    }
+}
+
+internal static class SalesOrderControllerStatic
+{
+    internal static async Task<Results<Created, NotFound>> HandleCreateSalesOrder(
+        ISalesOrderService salesOrderService,
+        SalesOrderJson body)
+    {
+        await salesOrderService.CreateSalesOrderAsync(new Guid(body.SalesOrderId),
+            body.SalesOrderNumber, body.OrderDate,
+            body.CustomerId, body.CustomerName,
+            body.Rows);
+
+        return TypedResults.Created($"v1/sales/{body.SalesOrderId}");
+    }
 }

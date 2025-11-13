@@ -5,10 +5,13 @@ using BrewUp.Persistence.Sales.Services;
 using BrewUp.Persistence.Services;
 using BrewUp.Persistence.Warehouses.Queries;
 using BrewUp.Persistence.Warehouses.Services;
-using BrewUp.Shared.Entities;
+using BrewUp.Rest.Controllers;
 using BrewUp.Rest.Validators.Warehouses;
+using BrewUp.Shared.Contracts;
+using BrewUp.Shared.Entities;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using SalesOrderService = BrewUp.Persistence.Services.SalesOrderService;
@@ -17,19 +20,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Register Modules
-builder.Services.AddCors(options => { options.AddPolicy("CorsPolicy", corsBuilder => corsBuilder.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader()); });
-var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).Enrich.FromLogContext().CreateLogger();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", corsBuilder => corsBuilder.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader());
+});
+var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).Enrich.FromLogContext()
+    .CreateLogger();
 builder.Logging.AddSerilog(logger);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc("v1", new OpenApiInfo()
 {
-	Description = "BrewUp",
-	Title = "BrewUp API",
-	Version = "v1",
-	Contact = new OpenApiContact
-	{
-		Name = "BrewUp"
-	}
+    Description = "BrewUp",
+    Title = "BrewUp API",
+    Version = "v1",
+    Contact = new OpenApiContact
+    {
+        Name = "BrewUp"
+    }
 }));
 
 builder.Services.AddFileBasedDb();
@@ -53,14 +60,18 @@ app.MapControllers();
 app.UseCors("CorsPolicy");
 
 // Configure the HTTP request pipeline.
-app.UseSwagger(s =>
-{
-	s.RouteTemplate = "documentation/{documentName}/documentation.json";
-});
+app.UseSwagger(s => { s.RouteTemplate = "documentation/{documentName}/documentation.json"; });
 app.UseSwaggerUI(s =>
 {
-	s.SwaggerEndpoint("/documentation/v1/documentation.json", "BrewUp");
-	s.RoutePrefix = "documentation";
+    s.SwaggerEndpoint("/documentation/v1/documentation.json", "BrewUp");
+    s.RoutePrefix = "documentation";
+});
+
+
+app.MapPost("v1/sales", (HttpContext context, [FromBody] SalesOrderJson body) =>
+{
+    ISalesOrderService salesOrderService = context.RequestServices.GetRequiredService<ISalesOrderService>();
+    return SalesOrderControllerStatic.HandleCreateSalesOrder(salesOrderService, body);
 });
 
 await app.RunAsync();
