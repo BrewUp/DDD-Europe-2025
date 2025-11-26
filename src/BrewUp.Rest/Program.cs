@@ -5,7 +5,6 @@ using BrewUp.Persistence.Sales.Services;
 using BrewUp.Persistence.Services;
 using BrewUp.Persistence.Warehouses.Queries;
 using BrewUp.Persistence.Warehouses.Services;
-using BrewUp.Rest.Controllers;
 using BrewUp.Rest.Validators.Warehouses;
 using BrewUp.Shared.Entities;
 using FluentValidation;
@@ -13,6 +12,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using static BrewUp.Persistence.Services.SalesOrderServiceStatic;
+using static BrewUp.Rest.Controllers.SalesOrderControllerStatic;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -66,7 +66,7 @@ app.UseSwaggerUI(s =>
 var saleRepository = new SaleRepository();
 var warehouseRepository = new WarehouseRepository();
 
-var createSalesOrderHandle = SalesOrderControllerStatic.CreateSalesOrderHandle(
+var createSalesOrderHandle = CreateSalesOrderHandle(
     CreateSalesOrder(
         saleRepository,
         warehouseRepository
@@ -78,7 +78,7 @@ app.MapPost("v1/sales", createSalesOrderHandle);
 app.MapGet("v1/sales", async (HttpContext context) =>
 {
     var salesQueryService = context.RequestServices.GetRequiredService<ISalesQueryService>();
-    return await SalesOrderControllerStatic.HandleGetOrders(salesQueryService);
+    return await HandleGetOrders(salesQueryService);
 });
 
 await app.RunAsync();
