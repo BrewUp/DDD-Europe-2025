@@ -6,26 +6,34 @@ namespace BrewUp.Infrastructure.TextBasedDb;
 
 public class SaleRepository : IRepository
 {
-    private static string FileName(string id) => $"{IRepository.DbRoot}/sales-entity-{id}.json";
-
     public async Task<T> GetByIdAsync<T>(string id) where T : EntityBase
     {
-        if (!File.Exists(FileName(id))) return await Task.FromResult<T>(null);
+        if (!File.Exists(SaleRepositoryStatic.FileName(id))) return await Task.FromResult<T>(null);
         return (await File.ReadAllTextAsync($"entity-{id}")).Deserialized<T>();
     }
 
     public async Task InsertAsync<T>(T entity) where T : EntityBase
     {
-        await File.WriteAllTextAsync(FileName(entity.Id), entity.Serialized());
+        await File.WriteAllTextAsync(SaleRepositoryStatic.FileName(entity.Id), entity.Serialized());
     }
 
     public async Task UpdateAsync<T>(T entity) where T : EntityBase
     {
-        await File.WriteAllTextAsync(FileName(entity.Id), entity.Serialized());
+        await File.WriteAllTextAsync(SaleRepositoryStatic.FileName(entity.Id), entity.Serialized());
     }
 
     public async Task DeleteAsync<T>(T entity) where T : EntityBase
     {
-        await Task.Run(() => File.Delete(FileName(entity.Id)));
+        await Task.Run(() => File.Delete(SaleRepositoryStatic.FileName(entity.Id)));
     }
+}
+
+public static class SaleRepositoryStatic
+{
+    public static async Task InsertSalesOrder(SalesOrder salesOrder)
+    {
+        await File.WriteAllTextAsync(FileName(salesOrder.Id), salesOrder.Serialized());
+    }
+
+    internal static string FileName(string id) => $"{IRepository.DbRoot}/sales-entity-{id}.json";
 }

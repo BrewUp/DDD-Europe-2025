@@ -9,12 +9,20 @@ namespace BrewUp.Rest.Services;
 
 public delegate Task<Results<Created, NotFound>> HandleCreateSalesOrder(SalesOrderJson body);
 
+public delegate Task CreateSalesOrder(
+    SalesOrderId salesOrderId,
+    SalesOrderNumber salesOrderNumber,
+    OrderDate orderDate,
+    CustomerId customerId,
+    CustomerName customerName,
+    IEnumerable<SalesOrderRowJson> salesOrders);
+
 public static class SalesOrderService
 {
-    public static HandleCreateSalesOrder HandleCreateSalesOrder(ISalesOrderService salesOrderService) =>
+    public static HandleCreateSalesOrder HandleCreateSalesOrder(CreateSalesOrderStatic salesOrderStatic) =>
         async body =>
         {
-            await salesOrderService.CreateSalesOrderAsync(
+            await salesOrderStatic(
                 SalesOrderId.Of(body.SalesOrderId),
                 SalesOrderNumber.Of(body.SalesOrderNumber),
                 OrderDate.Of(body.OrderDate),

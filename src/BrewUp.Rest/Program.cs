@@ -12,6 +12,9 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using static BrewUp.Infrastructure.TextBasedDb.SaleRepositoryStatic;
+using static BrewUp.Infrastructure.TextBasedDb.WarehouseRepositoryStatic;
+using static BrewUp.Persistence.Services.SalesOrderService;
 using static BrewUp.Rest.Services.SalesOrderService;
 using SalesOrderService = BrewUp.Persistence.Services.SalesOrderService;
 
@@ -22,16 +25,17 @@ builder.Services.AddCors(options => { options.AddPolicy("CorsPolicy", corsBuilde
 var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).Enrich.FromLogContext().CreateLogger();
 builder.Logging.AddSerilog(logger);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc("v1", new OpenApiInfo()
-{
-	Description = "BrewUp",
-	Title = "BrewUp API",
-	Version = "v1",
-	Contact = new OpenApiContact
-	{
-		Name = "BrewUp"
-	}
-}));
+builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc(
+    "v1", new OpenApiInfo()
+    {
+        Description = "BrewUp",
+        Title = "BrewUp API",
+        Version = "v1",
+        Contact = new OpenApiContact
+        {
+            Name = "BrewUp"
+        }
+    }));
 
 builder.Services.AddFileBasedDb();
 builder.Services.AddKeyedSingleton<IRepository, SaleRepository>("sale");
@@ -53,38 +57,37 @@ var app = builder.Build();
 app.UseCors("CorsPolicy");
 
 //Sales
+
+var handleCreateSalesOrder =
+    HandleCreateSalesOrder(
+        CreateSalesOrder(
+            InsertSalesOrder,
+            GetByIdAsync));
+
 var salesGroup = app.MapGroup("/v1/sales/").WithTags("Sales");
-
-var salesOrderService = app.Services.GetRequiredService<ISalesOrderService>();
-
-var handleCreateSalesOrder = HandleCreateSalesOrder(salesOrderService);
-
 salesGroup.MapPost("/", handleCreateSalesOrder)
-	.Produces(StatusCodes.Status400BadRequest)
-	.Produces(StatusCodes.Status201Created)
-	.WithName("CreateSalesOrder");
+    .Produces(StatusCodes.Status400BadRequest)
+    .Produces(StatusCodes.Status201Created)
+    .WithName("CreateSalesOrder");
 
 salesGroup.MapGet("/", HandleGetOrders)
-	.Produces(StatusCodes.Status404NotFound)
-	.Produces(StatusCodes.Status200OK)
-	.WithName("GetSalesOrders");
+    .Produces(StatusCodes.Status404NotFound)
+    .Produces(StatusCodes.Status200OK)
+    .WithName("GetSalesOrders");
 
 //Warehouses
 var warehousesGroup = app.MapGroup("/v1/warehouses/").WithTags("Warehouses");
 warehousesGroup.MapPost("/availabilities", WarehousesService.HandleSetAvailabilities)
-	.Produces(StatusCodes.Status400BadRequest)
-	.Produces(StatusCodes.Status200OK)
-	.WithName("SetAvailabilities");
+    .Produces(StatusCodes.Status400BadRequest)
+    .Produces(StatusCodes.Status200OK)
+    .WithName("SetAvailabilities");
 
 // Configure the HTTP request pipeline.
-app.UseSwagger(s =>
-{
-	s.RouteTemplate = "documentation/{documentName}/documentation.json";
-});
+app.UseSwagger(s => { s.RouteTemplate = "documentation/{documentName}/documentation.json"; });
 app.UseSwaggerUI(s =>
 {
-	s.SwaggerEndpoint("/documentation/v1/documentation.json", "BrewUp");
-	s.RoutePrefix = "documentation";
+    s.SwaggerEndpoint("/documentation/v1/documentation.json", "BrewUp");
+    s.RoutePrefix = "documentation";
 });
 
 await app.RunAsync();

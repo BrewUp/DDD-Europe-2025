@@ -8,6 +8,4 @@ public interface IRepository
 
     Task<T> GetByIdAsync<T>(string id) where T : EntityBase;
     Task InsertAsync<T>(T entity) where T : EntityBase;
-    Task UpdateAsync<T>(T entity) where T : EntityBase;
-    Task DeleteAsync<T>(T entity) where T : EntityBase;
 }
