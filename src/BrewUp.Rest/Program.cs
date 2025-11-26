@@ -71,7 +71,9 @@ app.UseSwaggerUI(s =>
 app.MapPost("v1/sales", (HttpContext context, [FromBody] SalesOrderJson body) =>
 {
     ISalesOrderService salesOrderService = context.RequestServices.GetRequiredService<ISalesOrderService>();
-    return SalesOrderControllerStatic.HandleCreateSalesOrder(salesOrderService, body);
+    var createSalesOrder = SalesOrderControllerStatic.HandleCreateSalesOrder(salesOrderService);
+
+    return createSalesOrder(body);
 });
 
 app.MapGet("v1/sales", async (HttpContext context) =>
