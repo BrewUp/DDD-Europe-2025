@@ -17,16 +17,14 @@ public class WarehouseRepository : IRepository
 		_database = mongoClient.GetDatabase("Sales");
 	}
 
-	public async Task<T> GetByIdAsync<T>(string id, CancellationToken cancellationToken) where T : EntityBase
+	public async Task<T> GetByIdAsync<T>(string id) where T : EntityBase
 	{
-		cancellationToken.ThrowIfCancellationRequested();
-
 		var type = typeof(T).Name;
 		try
 		{
 			var collection = _database.GetCollection<T>(typeof(T).Name);
 			var filter = Builders<T>.Filter.Eq("_id", id);
-			return (await collection.FindAsync(filter, cancellationToken: cancellationToken)).FirstOrDefault(cancellationToken: cancellationToken);
+			return (await collection.FindAsync(filter)).FirstOrDefault();
 		}
 		catch (Exception e)
 		{
@@ -36,15 +34,13 @@ public class WarehouseRepository : IRepository
 		}
 	}
 
-	public async Task InsertAsync<T>(T entity, CancellationToken cancellationToken) where T : EntityBase
+	public async Task InsertAsync<T>(T entity) where T : EntityBase
 	{
-		cancellationToken.ThrowIfCancellationRequested();
-
 		var type = typeof(T).Name;
 		try
 		{
 			var collection = _database.GetCollection<T>(type);
-			await collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
+			await collection.InsertOneAsync(entity);
 		}
 		catch (Exception e)
 		{
@@ -53,15 +49,13 @@ public class WarehouseRepository : IRepository
 		}
 	}
 
-	public async Task UpdateAsync<T>(T entity, CancellationToken cancellationToken) where T : EntityBase
+	public async Task UpdateAsync<T>(T entity) where T : EntityBase
 	{
-		cancellationToken.ThrowIfCancellationRequested();
-
 		var type = typeof(T).Name;
 		try
 		{
 			var collection = _database.GetCollection<T>(type);
-			await collection.ReplaceOneAsync(x => x.Id == entity.Id, entity, cancellationToken: cancellationToken);
+			await collection.ReplaceOneAsync(x => x.Id == entity.Id, entity);
 		}
 		catch (Exception e)
 		{
@@ -70,16 +64,14 @@ public class WarehouseRepository : IRepository
 		}
 	}
 
-	public async Task DeleteAsync<T>(T entity, CancellationToken cancellationToken) where T : EntityBase
+	public async Task DeleteAsync<T>(T entity) where T : EntityBase
 	{
-		cancellationToken.ThrowIfCancellationRequested();
-
 		var type = typeof(T).Name;
 		try
 		{
 			var collection = _database.GetCollection<T>(typeof(T).Name);
 			var filter = Builders<T>.Filter.Eq("_id", entity.Id);
-			await collection.FindOneAndDeleteAsync(filter, cancellationToken: cancellationToken);
+			await collection.FindOneAndDeleteAsync(filter);
 		}
 		catch (Exception e)
 		{

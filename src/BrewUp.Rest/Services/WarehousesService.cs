@@ -7,9 +7,9 @@ namespace BrewUp.Rest.Services;
 
 public static class WarehousesService
 {
-    public static async Task<Ok> HandleSetAvailabilities(SetAvailabilityJson body, IWarehouseService warehousesDomainService, CancellationToken cancellationToken)
+    public static async Task<Ok> HandleSetAvailabilities(SetAvailabilityJson body, IWarehouseService warehousesDomainService)
     {
-        await warehousesDomainService.UpdateAvailabilityDueToProductionOrderAsync(new Guid(body.BeerId), body.BeerName, body.Quantity, cancellationToken);
+        await warehousesDomainService.UpdateAvailabilityDueToProductionOrderAsync(new Guid(body.BeerId), body.BeerName, body.Quantity);
         return TypedResults.Ok();
     }
 }

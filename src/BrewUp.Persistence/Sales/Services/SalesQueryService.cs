@@ -7,11 +7,11 @@ namespace BrewUp.Persistence.Sales.Services;
 public sealed class SalesQueryService
     (ILoggerFactory loggerFactory, IQueries<SalesOrder> queries) : ServiceBase(loggerFactory), ISalesQueryService
 {
-    public async Task<PagedResult<SalesOrderJson>> GetSalesOrdersAsync(int page, int pageSize, CancellationToken cancellationToken)
+    public async Task<PagedResult<SalesOrderJson>> GetSalesOrdersAsync(int page, int pageSize)
     {
         try
         {
-            var salesOrders = await queries.GetByFilterAsync(null, page, pageSize, cancellationToken);
+            var salesOrders = await queries.GetByFilterAsync(null, page, pageSize);
 
             return salesOrders.TotalRecords > 0
                 ? new PagedResult<SalesOrderJson>(salesOrders.Results.Select(r => r.ToJson()), salesOrders.Page, salesOrders.PageSize, salesOrders.TotalRecords)
