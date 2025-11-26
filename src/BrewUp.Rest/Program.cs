@@ -12,6 +12,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using static BrewUp.Rest.Services.SalesOrderService;
 using SalesOrderService = BrewUp.Persistence.Services.SalesOrderService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,12 +54,17 @@ app.UseCors("CorsPolicy");
 
 //Sales
 var salesGroup = app.MapGroup("/v1/sales/").WithTags("Sales");
-salesGroup.MapPost("/", BrewUp.Rest.Services.SalesOrderService.HandleCreateSalesOrder)
+
+var salesOrderService = app.Services.GetRequiredService<ISalesOrderService>();
+
+var handleCreateSalesOrder = HandleCreateSalesOrder(salesOrderService);
+
+salesGroup.MapPost("/", handleCreateSalesOrder)
 	.Produces(StatusCodes.Status400BadRequest)
 	.Produces(StatusCodes.Status201Created)
 	.WithName("CreateSalesOrder");
 
-salesGroup.MapGet("/", BrewUp.Rest.Services.SalesOrderService.HandleGetOrders)
+salesGroup.MapGet("/", HandleGetOrders)
 	.Produces(StatusCodes.Status404NotFound)
 	.Produces(StatusCodes.Status200OK)
 	.WithName("GetSalesOrders");

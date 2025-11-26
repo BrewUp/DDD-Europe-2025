@@ -7,20 +7,23 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BrewUp.Rest.Services;
 
+public delegate Task<Results<Created, NotFound>> HandleCreateSalesOrder(SalesOrderJson body);
+
 public static class SalesOrderService
 {
-    public static async Task<Results<Created, NotFound>> HandleCreateSalesOrder(ISalesOrderService salesOrderService, SalesOrderJson body)
-    {
-        await salesOrderService.CreateSalesOrderAsync(
-            SalesOrderId.Of(body.SalesOrderId),
-            SalesOrderNumber.Of(body.SalesOrderNumber),
-            OrderDate.Of(body.OrderDate),
-            CustomerId.Of(body.CustomerId),
-            CustomerName.Of(body.CustomerName),
-            body.Rows);
+    public static HandleCreateSalesOrder HandleCreateSalesOrder(ISalesOrderService salesOrderService) =>
+        async body =>
+        {
+            await salesOrderService.CreateSalesOrderAsync(
+                SalesOrderId.Of(body.SalesOrderId),
+                SalesOrderNumber.Of(body.SalesOrderNumber),
+                OrderDate.Of(body.OrderDate),
+                CustomerId.Of(body.CustomerId),
+                CustomerName.Of(body.CustomerName),
+                body.Rows);
 
-        return TypedResults.Created($"v1/sales/{body.SalesOrderId}");
-    }
+            return TypedResults.Created($"v1/sales/{body.SalesOrderId}");
+        };
 
 
     public static async Task<Results<Ok<PagedResult<SalesOrderJson>>, NotFound>> HandleGetOrders(ISalesQueryService salesQueryService)
