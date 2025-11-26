@@ -33,19 +33,19 @@ builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc("v1", new OpenApiInfo()
 }));
 
 builder.Services.AddFileBasedDb();
-builder.Services.AddKeyedScoped<IRepository, SaleRepository>("sale");
-builder.Services.AddKeyedScoped<IRepository, WarehouseRepository>("warehouse");
+builder.Services.AddKeyedSingleton<IRepository, SaleRepository>("sale");
+builder.Services.AddKeyedSingleton<IRepository, WarehouseRepository>("warehouse");
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
-builder.Services.AddScoped<ISalesQueryService, SalesQueryService>();
-builder.Services.AddScoped<IQueries<SalesOrder>, SalesOrderQueries>();
+builder.Services.AddSingleton<ISalesOrderService, SalesOrderService>();
+builder.Services.AddSingleton<ISalesQueryService, SalesQueryService>();
+builder.Services.AddSingleton<IQueries<SalesOrder>, SalesOrderQueries>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<SetAvailabilityValidator>();
 builder.Services.AddSingleton<ValidationHandler>();
-builder.Services.AddScoped<IWarehouseService, WarehouseService>();
-builder.Services.AddScoped<IAvailabilityQueryService, AvailabilityQueryService>();
-builder.Services.AddScoped<IQueries<Availability>, AvailabilityQueries>();
+builder.Services.AddSingleton<IWarehouseService, WarehouseService>();
+builder.Services.AddSingleton<IAvailabilityQueryService, AvailabilityQueryService>();
+builder.Services.AddSingleton<IQueries<Availability>, AvailabilityQueries>();
 
 var app = builder.Build();
 
