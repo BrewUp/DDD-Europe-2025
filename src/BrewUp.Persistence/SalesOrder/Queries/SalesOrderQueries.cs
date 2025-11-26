@@ -2,11 +2,11 @@
 using BrewUp.Persistence.Services;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Sales.Queries;
+namespace BrewUp.Persistence.SalesOrder.Queries;
 
-public sealed class SalesOrderQueries : IQueries<SalesOrder>
+public sealed class SalesOrderQueries : IQueries<Shared.Entities.SalesOrder>
 {
-    public async Task<SalesOrder> GetByIdAsync(string id)
+    public async Task<Shared.Entities.SalesOrder> GetByIdAsync(string id)
     {
         string filePath = $"{IRepository.DbRoot}/sales-entity-{id}.json";
         if (!File.Exists(filePath))
@@ -15,20 +15,21 @@ public sealed class SalesOrderQueries : IQueries<SalesOrder>
         }
 
         string jsonString = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
-        return jsonString.Deserialized<SalesOrder>();
+        return jsonString.Deserialized<Shared.Entities.SalesOrder>();
     }
 
-    public async Task<PagedResult<SalesOrder>> GetByFilterAsync(Expression<Func<SalesOrder, bool>>? query, int page, int pageSize)
+    public async Task<PagedResult<Shared.Entities.SalesOrder>> GetByFilterAsync(
+        Expression<Func<Shared.Entities.SalesOrder, bool>>? query, int page, int pageSize)
     {
         if (--page < 0)
             page = 0;
 
         var files = Directory.GetFiles(IRepository.DbRoot, "sales-entity-*.json");
 
-        List<Task<SalesOrder>> allOrdersT = files.Select(async filePath =>
+        List<Task<Shared.Entities.SalesOrder>> allOrdersT = files.Select(async filePath =>
         {
             string json = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
-            var order = json.Deserialized<SalesOrder>();
+            var order = json.Deserialized<Shared.Entities.SalesOrder>();
             return order;
         }).ToList();
 
@@ -45,6 +46,6 @@ public sealed class SalesOrderQueries : IQueries<SalesOrder>
             .Take(pageSize)
             .ToList();
 
-        return new PagedResult<SalesOrder>(results, page, pageSize, count);
+        return new PagedResult<Shared.Entities.SalesOrder>(results, page, pageSize, count);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using BrewUp.Shared.Contracts;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Sales.Services;
+namespace BrewUp.Persistence.SalesOrder.Services;
 
 public interface ISalesQueryService
 {

@@ -1,5 +1,4 @@
-﻿using BrewUp.Persistence.Sales.Services;
-using BrewUp.Persistence.Services;
+﻿using BrewUp.Persistence.SalesOrder.Services;
 using BrewUp.Shared.Contracts;
 using BrewUp.Shared.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;

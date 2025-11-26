@@ -1,7 +1,7 @@
 using BrewUp.Infrastructure.TextBasedDb;
 using BrewUp.Persistence;
-using BrewUp.Persistence.Sales.Queries;
-using BrewUp.Persistence.Sales.Services;
+using BrewUp.Persistence.SalesOrder.Queries;
+using BrewUp.Persistence.SalesOrder.Services;
 using BrewUp.Persistence.Services;
 using BrewUp.Persistence.Warehouses.Queries;
 using BrewUp.Persistence.Warehouses.Services;
@@ -11,7 +11,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using static BrewUp.Persistence.Services.SalesOrderServiceStatic;
+using static BrewUp.Persistence.SalesOrder.Services.SalesOrderServiceStatic;
 using static BrewUp.Rest.Controllers.SalesOrderControllerStatic;
 
 var builder = WebApplication.CreateBuilder(args);
