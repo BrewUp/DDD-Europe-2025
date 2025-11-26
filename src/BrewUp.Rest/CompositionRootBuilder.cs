@@ -11,7 +11,7 @@ public static class CompositionRootBuilder
     {
         return new CompositionRoot(
             CreateSalesOrder: SalesOrderServiceStatic.CreateSalesOrder(
-                new SaleRepository(),
+                SaleOrderRepository.SaveSalesOrder,
                 new WarehouseRepository()
             ));
     }

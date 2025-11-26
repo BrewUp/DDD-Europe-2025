@@ -10,7 +10,7 @@ public delegate Task CreateSalesOrder(Guid salesOrderId, string salesOrderNumber
 public static class SalesOrderServiceStatic
 {
     public static CreateSalesOrder CreateSalesOrder(
-        IRepository saleRepository,
+        SaveSalesOrder saveSalesOrder,
         IRepository warehouseRepository) =>
         async (salesOrderId, salesOrderNumber, orderDate, customerId, customerName, rows) =>
         {
@@ -28,6 +28,6 @@ public static class SalesOrderServiceStatic
                 customerName,
                 beersAvailable);
 
-            await saleRepository.InsertAsync(aggregate.MapToSharedDto());
+            await saveSalesOrder(aggregate);
         };
 }

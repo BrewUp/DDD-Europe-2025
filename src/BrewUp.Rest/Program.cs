@@ -5,13 +5,13 @@ using BrewUp.Persistence.SalesOrder.Services;
 using BrewUp.Persistence.Services;
 using BrewUp.Persistence.Warehouses.Queries;
 using BrewUp.Persistence.Warehouses.Services;
+using BrewUp.Rest;
 using BrewUp.Rest.Validators.Warehouses;
 using BrewUp.Shared.Entities;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using static BrewUp.Persistence.SalesOrder.Services.SalesOrderServiceStatic;
 using static BrewUp.Rest.Controllers.SalesOrderControllerStatic;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,17 +63,9 @@ app.UseSwaggerUI(s =>
     s.RoutePrefix = "documentation";
 });
 
-var saleRepository = new SaleRepository();
-var warehouseRepository = new WarehouseRepository();
+var compositionRoot = CompositionRootBuilder.Build();
 
-var createSalesOrderHandle = CreateSalesOrderHandle(
-    CreateSalesOrder(
-        saleRepository,
-        warehouseRepository
-    )
-);
-
-app.MapPost("v1/sales", createSalesOrderHandle);
+app.MapPost("v1/sales", compositionRoot.CreateSalesOrder);
 
 app.MapGet("v1/sales", async (HttpContext context) =>
 {
