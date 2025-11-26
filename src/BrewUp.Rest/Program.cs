@@ -74,4 +74,10 @@ app.MapPost("v1/sales", (HttpContext context, [FromBody] SalesOrderJson body) =>
     return SalesOrderControllerStatic.HandleCreateSalesOrder(salesOrderService, body);
 });
 
+app.MapGet("v1/sales", async (HttpContext context) =>
+{
+    var salesQueryService = context.RequestServices.GetRequiredService<ISalesQueryService>();
+    return await SalesOrderControllerStatic.HandleGetOrders(salesQueryService);
+});
+
 await app.RunAsync();
