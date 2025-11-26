@@ -1,0 +1,29 @@
+﻿using BrewUp.Persistence.SalesOrder.Services;
+using BrewUp.Shared.Contracts;
+using BrewUp.Shared.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
+
+namespace BrewUp.Rest.Controllers;
+
+internal delegate Task<Results<Created, NotFound>> CreateSalesOrderHandle(SalesOrderJson salesOrderJson);
+
+internal static class SalesOrderControllerStatic
+{
+    internal static CreateSalesOrderHandle CreateSalesOrderHandle(CreateSalesOrder createSalesOrder) =>
+        async body =>
+        {
+            await createSalesOrder(new Guid(body.SalesOrderId),
+                body.SalesOrderNumber, body.OrderDate,
+                body.CustomerId, body.CustomerName,
+                body.Rows);
+
+            return TypedResults.Created($"v1/sales/{body.SalesOrderId}");
+        };
+
+    internal static async Task<Results<Ok<PagedResult<SalesOrderJson>>, NotFound>> HandleGetOrders(
+        ISalesQueryService salesQueryService)
+    {
+        var orders = await salesQueryService.GetSalesOrdersAsync(0, 30);
+        return TypedResults.Ok(orders);
+    }
+}

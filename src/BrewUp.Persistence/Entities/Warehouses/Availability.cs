@@ -1,30 +1,29 @@
 ﻿using BrewUp.Shared.CustomTypes;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Entities.Warehouses
+namespace BrewUp.Persistence.Entities.Warehouses;
+
+public class Availability : AggregateRoot
 {
-	public class Availability : AggregateRoot
-	{
-		internal BeerId _beerId = default!;
-		internal BeerName _beerName = default!;
-		internal Quantity _quantity = default!;
+    internal Guid BeerId = default!;
+    internal string BeerName = default!;
+    internal Quantity Quantity = default!;
 
-		protected Availability()
-		{
-		}
+    protected Availability()
+    {
+    }
 
-		internal static Availability CreateAvailability(BeerId beerId, BeerName beerName, Quantity quantity)
-		{
-			return new Availability(beerId, beerName, quantity);
-		}
+    internal static Availability CreateAvailability(Guid beerId, string beerName, Quantity quantity)
+    {
+        return new Availability(beerId, beerName, quantity);
+    }
 
-		private Availability(BeerId beerId, BeerName beerName, Quantity quantity)
-		{
-			Id = beerId.Value.ToString();
+    private Availability(Guid beerId, string beerName, Quantity quantity)
+    {
+        Id = beerId.ToString();
 
-			_beerId = beerId;
-			_beerName = beerName;
-			_quantity = quantity;
-		}
-	}
+        BeerId = beerId;
+        BeerName = beerName;
+        Quantity = quantity;
+    }
 }

@@ -1,5 +1,4 @@
-﻿using BrewUp.Shared.CustomTypes;
-using BrewUp.Shared.Contracts;
+﻿using BrewUp.Shared.Contracts;
 
 namespace BrewUp.Shared.Entities;
 
@@ -17,17 +16,17 @@ public class SalesOrder : EntityBase
     {
     }
 
-    public static SalesOrder Create(SalesOrderId salesOrderId, SalesOrderNumber salesOrderNumber, OrderDate orderDate, CustomerId customerId,
-        CustomerName customerName, IEnumerable<SalesOrderRowJson> rows)
+    public static SalesOrder Create(Guid salesOrderId, string salesOrderNumber, DateTime orderDate, Guid customerId,
+        string customerName, IEnumerable<SalesOrderRowJson> rows)
     {
         return new SalesOrder
         {
-            Id = salesOrderId.Value.ToString(),
-            SalesOrderNumber = salesOrderNumber.Value,
-            OrderDate = orderDate.Value,
+            Id = salesOrderId.ToString(),
+            SalesOrderNumber = salesOrderNumber,
+            OrderDate = orderDate,
 
-            CustomerId = customerId.Value,
-            CustomerName = customerName.Value,
+            CustomerId = customerId,
+            CustomerName = customerName,
 
             Rows = rows
         };

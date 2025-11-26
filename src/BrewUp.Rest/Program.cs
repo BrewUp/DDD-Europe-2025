@@ -1,85 +1,76 @@
-using BrewUp.Infrastructure.MongoDb;
+using BrewUp.Infrastructure.TextBasedDb;
 using BrewUp.Persistence;
-using BrewUp.Persistence.Sales.Queries;
-using BrewUp.Persistence.Sales.Services;
+using BrewUp.Persistence.SalesOrder.Queries;
+using BrewUp.Persistence.SalesOrder.Services;
 using BrewUp.Persistence.Services;
 using BrewUp.Persistence.Warehouses.Queries;
 using BrewUp.Persistence.Warehouses.Services;
-using BrewUp.Rest.Services;
+using BrewUp.Rest;
 using BrewUp.Rest.Validators.Warehouses;
 using BrewUp.Shared.Entities;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using SalesOrderService = BrewUp.Persistence.Services.SalesOrderService;
+using static BrewUp.Rest.Controllers.SalesOrderControllerStatic;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
 
 // Register Modules
-builder.Services.AddCors(options => { options.AddPolicy("CorsPolicy", corsBuilder => corsBuilder.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader()); });
-var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).Enrich.FromLogContext().CreateLogger();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", corsBuilder => corsBuilder.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader());
+});
+var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).Enrich.FromLogContext()
+    .CreateLogger();
 builder.Logging.AddSerilog(logger);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc("v1", new OpenApiInfo()
 {
-	Description = "BrewUp",
-	Title = "BrewUp API",
-	Version = "v1",
-	Contact = new OpenApiContact
-	{
-		Name = "BrewUp"
-	}
+    Description = "BrewUp",
+    Title = "BrewUp API",
+    Version = "v1",
+    Contact = new OpenApiContact
+    {
+        Name = "BrewUp"
+    }
 }));
 
-builder.Services.AddMongoDb(builder.Configuration.GetSection("BrewUp:MongoDbSettings").Get<MongoDbSettings>()!);
-
-builder.Services.AddKeyedScoped<IRepository, SaleRepository>("sale");
-builder.Services.AddKeyedScoped<IRepository, WarehouseRepository>("warehouse");
+builder.Services.AddFileBasedDb();
+builder.Services.AddKeyedSingleton<IRepository, WarehouseRepository>("warehouse");
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
-builder.Services.AddScoped<ISalesQueryService, SalesQueryService>();
-builder.Services.AddScoped<IQueries<SalesOrder>, SalesOrderQueries>();
+builder.Services.AddSingleton<ISalesQueryService, SalesQueryService>();
+builder.Services.AddSingleton<IQueries<SalesOrder>, SalesOrderQueries>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<SetAvailabilityValidator>();
 builder.Services.AddSingleton<ValidationHandler>();
-builder.Services.AddScoped<IWarehouseService, WarehouseService>();
-builder.Services.AddScoped<IAvailabilityQueryService, AvailabilityQueryService>();
-builder.Services.AddScoped<IQueries<Availability>, AvailabilityQueries>();
+builder.Services.AddSingleton<IWarehouseService, WarehouseService>();
+builder.Services.AddSingleton<IAvailabilityQueryService, AvailabilityQueryService>();
+builder.Services.AddSingleton<IQueries<Availability>, AvailabilityQueries>();
 
 var app = builder.Build();
+app.MapControllers();
 
 app.UseCors("CorsPolicy");
 
-//Sales
-var salesGroup = app.MapGroup("/v1/sales/").WithTags("Sales");
-salesGroup.MapPost("/", BrewUp.Rest.Services.SalesOrderService.HandleCreateSalesOrder)
-	.Produces(StatusCodes.Status400BadRequest)
-	.Produces(StatusCodes.Status201Created)
-	.WithName("CreateSalesOrder");
-
-salesGroup.MapGet("/", BrewUp.Rest.Services.SalesOrderService.HandleGetOrders)
-	.Produces(StatusCodes.Status404NotFound)
-	.Produces(StatusCodes.Status200OK)
-	.WithName("GetSalesOrders");
-
-//Warehouses
-var warehousesGroup = app.MapGroup("/v1/warehouses/").WithTags("Warehouses");
-warehousesGroup.MapPost("/availabilities", WarehousesService.HandleSetAvailabilities)
-	.Produces(StatusCodes.Status400BadRequest)
-	.Produces(StatusCodes.Status200OK)
-	.WithName("SetAvailabilities");
-
 // Configure the HTTP request pipeline.
-app.UseSwagger(s =>
-{
-	s.RouteTemplate = "documentation/{documentName}/documentation.json";
-});
+app.UseSwagger(s => { s.RouteTemplate = "documentation/{documentName}/documentation.json"; });
 app.UseSwaggerUI(s =>
 {
-	s.SwaggerEndpoint("/documentation/v1/documentation.json", "BrewUp");
-	s.RoutePrefix = "documentation";
+    s.SwaggerEndpoint("/documentation/v1/documentation.json", "BrewUp");
+    s.RoutePrefix = "documentation";
+});
+
+var compositionRoot = CompositionRootBuilder.Build();
+
+app.MapPost("v1/sales", compositionRoot.CreateSalesOrder);
+
+app.MapGet("v1/sales", async (HttpContext context) =>
+{
+    var salesQueryService = context.RequestServices.GetRequiredService<ISalesQueryService>();
+    return await HandleGetOrders(salesQueryService);
 });
 
 await app.RunAsync();

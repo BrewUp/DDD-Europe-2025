@@ -2,33 +2,34 @@
 using BrewUp.Persistence.Services;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Warehouses.Queries;
+namespace BrewUp.Persistence.SalesOrder.Queries;
 
-public sealed class AvailabilityQueries : IQueries<Availability>
+public sealed class SalesOrderQueries : IQueries<Shared.Entities.SalesOrder>
 {
-    public async Task<Availability> GetByIdAsync(string id)
+    public async Task<Shared.Entities.SalesOrder> GetByIdAsync(string id)
     {
-        string filePath = $"{IRepository.DbRoot}/warehouse-entity-{id}.json";
+        string filePath = $"{IRepository.DbRoot}/sales-entity-{id}.json";
         if (!File.Exists(filePath))
         {
             return null;
         }
 
         string jsonString = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
-        return jsonString.Deserialized<Availability>();
+        return jsonString.Deserialized<Shared.Entities.SalesOrder>();
     }
 
-    public async Task<PagedResult<Availability>> GetByFilterAsync(Expression<Func<Availability, bool>>? query, int page, int pageSize)
+    public async Task<PagedResult<Shared.Entities.SalesOrder>> GetByFilterAsync(
+        Expression<Func<Shared.Entities.SalesOrder, bool>>? query, int page, int pageSize)
     {
         if (--page < 0)
             page = 0;
 
-        var files = Directory.GetFiles(IRepository.DbRoot, "warehouse-entity-*.json");
+        var files = Directory.GetFiles(IRepository.DbRoot, "sales-entity-*.json");
 
-        List<Task<Availability>> allOrdersT = files.Select(async filePath =>
+        List<Task<Shared.Entities.SalesOrder>> allOrdersT = files.Select(async filePath =>
         {
             string json = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
-            var order = json.Deserialized<Availability>();
+            var order = json.Deserialized<Shared.Entities.SalesOrder>();
             return order;
         }).ToList();
 
@@ -45,6 +46,6 @@ public sealed class AvailabilityQueries : IQueries<Availability>
             .Take(pageSize)
             .ToList();
 
-        return new PagedResult<Availability>(results, page, pageSize, count);
+        return new PagedResult<Shared.Entities.SalesOrder>(results, page, pageSize, count);
     }
 }

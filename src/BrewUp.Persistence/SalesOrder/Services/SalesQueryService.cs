@@ -1,0 +1,27 @@
+﻿using BrewUp.Shared.Contracts;
+using BrewUp.Shared.Entities;
+using Microsoft.Extensions.Logging;
+
+namespace BrewUp.Persistence.SalesOrder.Services;
+
+public sealed class SalesQueryService(ILoggerFactory loggerFactory, IQueries<Shared.Entities.SalesOrder> queries)
+    : ServiceBase(loggerFactory), ISalesQueryService
+{
+    public async Task<PagedResult<SalesOrderJson>> GetSalesOrdersAsync(int page, int pageSize)
+    {
+        try
+        {
+            var salesOrders = await queries.GetByFilterAsync(null, page, pageSize);
+
+            return salesOrders.TotalRecords > 0
+                ? new PagedResult<SalesOrderJson>(salesOrders.Results.Select(r => r.ToJson()), salesOrders.Page,
+                    salesOrders.PageSize, salesOrders.TotalRecords)
+                : new PagedResult<SalesOrderJson>(Enumerable.Empty<SalesOrderJson>(), 0, 0, 0);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error reading SalesOrders");
+            throw;
+        }
+    }
+}
