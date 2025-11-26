@@ -9,19 +9,23 @@ namespace BrewUp.Rest.Services;
 
 public static class SalesOrderService
 {
-	public static async Task<Results<Created, NotFound>> HandleCreateSalesOrder(ISalesOrderService salesOrderService, SalesOrderJson body)
-	{
-		await salesOrderService.CreateSalesOrderAsync(new SalesOrderId(new Guid(body.SalesOrderId)),
-			new SalesOrderNumber(body.SalesOrderNumber), new OrderDate(body.OrderDate),
-			new CustomerId(body.CustomerId), new CustomerName(body.CustomerName),
-			body.Rows);
+    public static async Task<Results<Created, NotFound>> HandleCreateSalesOrder(ISalesOrderService salesOrderService, SalesOrderJson body)
+    {
+        await salesOrderService.CreateSalesOrderAsync(
+            SalesOrderId.Of(body.SalesOrderId),
+            SalesOrderNumber.Of(body.SalesOrderNumber),
+            OrderDate.Of(body.OrderDate),
+            CustomerId.Of(body.CustomerId),
+            CustomerName.Of(body.CustomerName),
+            body.Rows);
 
-		return TypedResults.Created($"v1/sales/{body.SalesOrderId}");
-	}
+        return TypedResults.Created($"v1/sales/{body.SalesOrderId}");
+    }
 
-	public static async Task<Results<Ok<PagedResult<SalesOrderJson>>, NotFound>> HandleGetOrders(ISalesQueryService salesQueryService)
-	{
-		var orders = await salesQueryService.GetSalesOrdersAsync(0, 30);
-		return TypedResults.Ok(orders);
-	}
+
+    public static async Task<Results<Ok<PagedResult<SalesOrderJson>>, NotFound>> HandleGetOrders(ISalesQueryService salesQueryService)
+    {
+        var orders = await salesQueryService.GetSalesOrdersAsync(0, 30);
+        return TypedResults.Ok(orders);
+    }
 }
