@@ -12,7 +12,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using SalesOrderService = BrewUp.Persistence.Services.SalesOrderService;
+using static BrewUp.Persistence.Services.SalesOrderServiceStatic;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -38,11 +38,9 @@ builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc("v1", new OpenApiInfo()
 }));
 
 builder.Services.AddFileBasedDb();
-builder.Services.AddKeyedSingleton<IRepository, SaleRepository>("sale");
 builder.Services.AddKeyedSingleton<IRepository, WarehouseRepository>("warehouse");
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddSingleton<ISalesOrderService, SalesOrderService>();
 builder.Services.AddSingleton<ISalesQueryService, SalesQueryService>();
 builder.Services.AddSingleton<IQueries<SalesOrder>, SalesOrderQueries>();
 
@@ -65,10 +63,17 @@ app.UseSwaggerUI(s =>
     s.RoutePrefix = "documentation";
 });
 
-ISalesOrderService salesOrderService = app.Services.GetRequiredService<ISalesOrderService>();
-var createSalesOrder = SalesOrderControllerStatic.HandleCreateSalesOrder(salesOrderService);
+var saleRepository = new SaleRepository();
+var warehouseRepository = new WarehouseRepository();
 
-app.MapPost("v1/sales", createSalesOrder);
+var createSalesOrderHandle = SalesOrderControllerStatic.CreateSalesOrderHandle(
+    CreateSalesOrder(
+        saleRepository,
+        warehouseRepository
+    )
+);
+
+app.MapPost("v1/sales", createSalesOrderHandle);
 
 app.MapGet("v1/sales", async (HttpContext context) =>
 {

@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BrewUp.Rest.Controllers;
 
-delegate Task<Results<Created, NotFound>> CreateSalesOrder(SalesOrderJson salesOrderJson);
+internal delegate Task<Results<Created, NotFound>> CreateSalesOrderHandle(SalesOrderJson salesOrderJson);
 
 internal static class SalesOrderControllerStatic
 {
-    internal static CreateSalesOrder HandleCreateSalesOrder(ISalesOrderService salesOrderService) =>
+    internal static CreateSalesOrderHandle CreateSalesOrderHandle(CreateSalesOrder createSalesOrder) =>
         async body =>
         {
-            await salesOrderService.CreateSalesOrderAsync(new Guid(body.SalesOrderId),
+            await createSalesOrder(new Guid(body.SalesOrderId),
                 body.SalesOrderNumber, body.OrderDate,
                 body.CustomerId, body.CustomerName,
                 body.Rows);
