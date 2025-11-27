@@ -1,4 +1,5 @@
-using BrewUp.Infrastructure.TextBasedDb;
+using BrewUp.Persistence.Entities.Sales;
+using BrewUp.Persistence.Entities.Warehouses;
 using BrewUp.Persistence.Sales.Queries;
 using BrewUp.Persistence.Sales.Services;
 using BrewUp.Persistence.Services;

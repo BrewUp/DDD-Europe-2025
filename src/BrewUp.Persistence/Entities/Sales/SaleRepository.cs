@@ -1,8 +1,7 @@
-﻿using BrewUp.Persistence;
-using BrewUp.Persistence.Services;
+﻿using BrewUp.Persistence.Services;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Infrastructure.TextBasedDb;
+namespace BrewUp.Persistence.Entities.Sales;
 
 public class SaleRepository : IRepository
 {
@@ -30,7 +29,7 @@ public class SaleRepository : IRepository
 
 public static class SaleRepositoryStatic
 {
-    public static async Task InsertSalesOrder(SalesOrder salesOrder)
+    public static async Task InsertSalesOrder(Shared.Entities.SalesOrder salesOrder)
     {
         await File.WriteAllTextAsync(FileName(salesOrder.Id), salesOrder.Serialized());
     }

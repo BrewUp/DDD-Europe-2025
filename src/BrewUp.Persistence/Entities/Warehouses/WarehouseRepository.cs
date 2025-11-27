@@ -1,8 +1,7 @@
-﻿using BrewUp.Persistence;
-using BrewUp.Persistence.Services;
+﻿using BrewUp.Persistence.Services;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Infrastructure.TextBasedDb;
+namespace BrewUp.Persistence.Entities.Warehouses;
 
 public class WarehouseRepository : IRepository
 {
@@ -34,11 +33,11 @@ public static class WarehouseRepositoryStatic
 {
     internal static string FileName(string id) => $"{IRepository.DbRoot}/warehouse-entity-{id}.json";
 
-    public static async Task<Availability> GetAvailabilityById(string id)
+    public static async Task<Shared.Entities.Availability> GetAvailabilityById(string id)
     {
-        if (!File.Exists(FileName(id))) return await Task.FromResult<Availability>(null);
+        if (!File.Exists(FileName(id))) return await Task.FromResult<Shared.Entities.Availability>(null);
 
-        return (await File.ReadAllTextAsync(FileName(id))).Deserialized<Availability>();
+        return (await File.ReadAllTextAsync(FileName(id))).Deserialized<Shared.Entities.Availability>();
     }
 
     public static InsertAvailability InsertAvailability = async availability =>
