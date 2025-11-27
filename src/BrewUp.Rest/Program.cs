@@ -1,4 +1,3 @@
-using BrewUp.Infrastructure.TextBasedDb;
 using BrewUp.Rest;
 using BrewUp.Rest.Validators.Warehouses;
 using FluentValidation;
@@ -24,8 +23,6 @@ builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc(
             Name = "BrewUp"
         }
     }));
-
-builder.Services.AddFileBasedDb();
 
 builder.Services.AddFluentValidationAutoValidation();
 
