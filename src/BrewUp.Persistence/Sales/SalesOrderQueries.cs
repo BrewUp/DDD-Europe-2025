@@ -10,7 +10,7 @@ internal static class SalesOrderQueries
         if (--page < 0)
             page = 0;
 
-        var files = Directory.GetFiles(IRepository.DbRoot, "sales-entity-*.json");
+        var files = Directory.GetFiles(FileBasedDbConfiguration.DbRoot, "sales-entity-*.json");
 
         List<Task<Shared.Entities.SalesOrder>> allOrdersT = files.Select(async filePath =>
         {

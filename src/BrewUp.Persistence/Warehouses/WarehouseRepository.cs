@@ -2,7 +2,7 @@
 
 internal static class WarehouseRepositoryStatic
 {
-    private static string FileName(string id) => $"{IRepository.DbRoot}/warehouse-entity-{id}.json";
+    private static string FileName(string id) => $"{FileBasedDbConfiguration.DbRoot}/warehouse-entity-{id}.json";
 
     internal static async Task<Shared.Entities.Availability> GetAvailabilityById(string id)
     {
