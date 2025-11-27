@@ -4,13 +4,13 @@ using BrewUp.Shared.CustomTypes;
 using BrewUp.Shared.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace BrewUp.Rest.Services;
+namespace BrewUp.Rest.Handlers;
 
 public delegate Task<Results<Created, NotFound>> HandleCreateSalesOrder(SalesOrderJson body);
 
 public delegate Task<Results<Ok<PagedResult<SalesOrderJson>>, NotFound>> HandleGetOrders();
 
-public static class SalesOrderService
+public static class SalesOrderHandler
 {
     public static HandleCreateSalesOrder HandleCreateSalesOrder(CreateSalesOrderStatic salesOrderStatic) =>
         async body =>

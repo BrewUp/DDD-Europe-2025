@@ -2,11 +2,11 @@
 using BrewUp.Shared.Contracts;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace BrewUp.Rest.Services;
+namespace BrewUp.Rest.Handlers;
 
 public delegate Task<Ok> HandleSetAvailabilities(SetAvailabilityJson body);
 
-public static class WarehousesService
+public static class WarehousesHandler
 {
     public static HandleSetAvailabilities HandleSetAvailabilities(UpdateAvailabilityDueToProductionOrder updateAvailabilityDueToProductionOrder) =>
         async body =>
