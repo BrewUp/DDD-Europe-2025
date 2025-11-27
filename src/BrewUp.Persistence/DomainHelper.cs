@@ -1,6 +1,5 @@
 ﻿using BrewUp.Persistence.Entities.Sales;
 using BrewUp.Shared.Contracts;
-using BrewUp.Shared.CustomTypes;
 
 namespace BrewUp.Persistence;
 

@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using BrewUp.Persistence.Sales.Queries;
+﻿using BrewUp.Persistence.Sales.Queries;
 using BrewUp.Shared.Contracts;
 using BrewUp.Shared.Entities;
 using Serilog.Core;

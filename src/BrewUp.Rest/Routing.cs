@@ -1,3 +1,4 @@
+using BrewUp.Persistence;
 using BrewUp.Rest.Services;
 
 namespace BrewUp.Rest;

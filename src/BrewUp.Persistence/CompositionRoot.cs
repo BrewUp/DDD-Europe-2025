@@ -5,7 +5,7 @@ using BrewUp.Persistence.Sales.Services;
 using BrewUp.Persistence.Services;
 using Serilog.Core;
 
-namespace BrewUp.Rest;
+namespace BrewUp.Persistence;
 
 public record CompositionRoot(
     GetSalesOrders GetSalesOrders,
