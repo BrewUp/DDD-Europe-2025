@@ -1,17 +1,11 @@
 using BrewUp.Persistence;
 using BrewUp.Rest;
-using BrewUp.Rest.Validators.Warehouses;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register Modules
 builder.Services.AddCors(options => { options.AddPolicy("CorsPolicy", corsBuilder => corsBuilder.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader()); });
-var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).Enrich.FromLogContext().CreateLogger();
-builder.Logging.AddSerilog(logger);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc(
     "v1", new OpenApiInfo
@@ -25,14 +19,10 @@ builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc(
         }
     }));
 
-builder.Services.AddFluentValidationAutoValidation();
-
-builder.Services.AddValidatorsFromAssemblyContaining<SetAvailabilityValidator>();
-builder.Services.AddSingleton<ValidationHandler>();
-
 var app = builder.Build();
 app.UseCors("CorsPolicy");
 
+var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).Enrich.FromLogContext().CreateLogger();
 var compositionRoot = CompositionRoot.Build(logger);
 app.DefineRoutes(compositionRoot);
 
