@@ -25,7 +25,7 @@ public delegate Task CreateSalesOrderStatic(
 
 public record CompositionRoot(
     GetSalesOrders GetSalesOrders,
-    CreateSalesOrderStatic CreateSalesOrderStatic,
+    CreateSalesOrderStatic CreateSalesOrder,
     UpdateAvailabilityDueToProductionOrder UpdateAvailabilityDueToProductionOrder)
 {
     public static CompositionRoot Build(Logger logger) =>
@@ -35,7 +35,7 @@ public record CompositionRoot(
                     logger,
                     SalesOrderQueries.GetSalesOrderByFilter),
 
-            CreateSalesOrderStatic:
+            CreateSalesOrder:
                 SalesOrderService.CreateSalesOrder(
                     SaleRepository.InsertSalesOrder,
                     WarehouseRepository.GetAvailabilityById),
