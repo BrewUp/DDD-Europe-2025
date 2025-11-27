@@ -4,21 +4,16 @@ using BrewUp.Shared.Entities;
 
 namespace BrewUp.Persistence.Sales.Queries;
 
-public sealed class SalesOrderQueries : IQueries<SalesOrder>
+public delegate Task<PagedResult<SalesOrder>> GetSalesOrderByFilter(
+    Expression<Func<SalesOrder, bool>>? query,
+    int page,
+    int pageSize);
+
+
+public static class SalesOrderQueries
 {
-    public async Task<SalesOrder> GetByIdAsync(string id)
-    {
-        string filePath = $"{IRepository.DbRoot}/sales-entity-{id}.json";
-        if (!File.Exists(filePath))
-        {
-            return null;
-        }
-
-        string jsonString = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
-        return jsonString.Deserialized<SalesOrder>();
-    }
-
-    public async Task<PagedResult<SalesOrder>> GetByFilterAsync(Expression<Func<SalesOrder, bool>>? query, int page, int pageSize)
+    public static GetSalesOrderByFilter GetSalesOrderByFilter =
+        async (query, page, pageSize) =>
     {
         if (--page < 0)
             page = 0;
@@ -46,5 +41,5 @@ public sealed class SalesOrderQueries : IQueries<SalesOrder>
             .ToList();
 
         return new PagedResult<SalesOrder>(results, page, pageSize, count);
-    }
+    };
 }

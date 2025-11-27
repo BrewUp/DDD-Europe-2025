@@ -9,6 +9,7 @@ namespace BrewUp.Rest.Services;
 
 public delegate Task<Results<Created, NotFound>> HandleCreateSalesOrder(SalesOrderJson body);
 
+public delegate Task<Results<Ok<PagedResult<SalesOrderJson>>, NotFound>> HandleGetOrders();
 
 public static class SalesOrderService
 {
@@ -27,9 +28,9 @@ public static class SalesOrderService
         };
 
 
-    public static async Task<Results<Ok<PagedResult<SalesOrderJson>>, NotFound>> HandleGetOrders(ISalesQueryService salesQueryService)
+    public static HandleGetOrders HandleGetOrders(GetSalesOrders getGetSalesOrders) => async () =>
     {
-        var orders = await salesQueryService.GetSalesOrdersAsync(0, 30);
+        var orders = await getGetSalesOrders(0, 30);
         return TypedResults.Ok(orders);
-    }
+    };
 }

@@ -1,17 +1,21 @@
-﻿using BrewUp.Shared.Contracts;
+﻿using System.Linq.Expressions;
+using BrewUp.Persistence.Sales.Queries;
+using BrewUp.Shared.Contracts;
 using BrewUp.Shared.Entities;
-using Microsoft.Extensions.Logging;
+using Serilog.Core;
 
 namespace BrewUp.Persistence.Sales.Services;
 
-public sealed class SalesQueryService
-    (ILoggerFactory loggerFactory, IQueries<SalesOrder> queries) : ServiceBase(loggerFactory), ISalesQueryService
+public delegate Task<PagedResult<SalesOrderJson>> GetSalesOrders(int page, int pageSize);
+
+public static class SalesQueryService
 {
-    public async Task<PagedResult<SalesOrderJson>> GetSalesOrdersAsync(int page, int pageSize)
+
+    public static GetSalesOrders GetSalesOrders(Logger logger, GetSalesOrderByFilter getSalesOrderByFilter) => async (page, pageSize) =>
     {
         try
         {
-            var salesOrders = await queries.GetByFilterAsync(null, page, pageSize);
+            var salesOrders = await getSalesOrderByFilter(null, page, pageSize);
 
             return salesOrders.TotalRecords > 0
                 ? new PagedResult<SalesOrderJson>(salesOrders.Results.Select(r => r.ToJson()), salesOrders.Page, salesOrders.PageSize, salesOrders.TotalRecords)
@@ -19,8 +23,8 @@ public sealed class SalesQueryService
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error reading SalesOrders");
+            logger.Error(ex, "Error reading SalesOrders");
             throw;
         }
-    }
+    };
 }

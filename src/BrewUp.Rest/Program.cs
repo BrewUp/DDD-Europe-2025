@@ -1,7 +1,6 @@
 using BrewUp.Infrastructure.TextBasedDb;
 using BrewUp.Persistence;
 using BrewUp.Persistence.Sales.Queries;
-using BrewUp.Persistence.Sales.Services;
 using BrewUp.Persistence.Services;
 using BrewUp.Persistence.Warehouses.Queries;
 using BrewUp.Persistence.Warehouses.Services;
@@ -14,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using static BrewUp.Infrastructure.TextBasedDb.SaleRepositoryStatic;
 using static BrewUp.Infrastructure.TextBasedDb.WarehouseRepositoryStatic;
+using static BrewUp.Persistence.Sales.Services.SalesQueryService;
 using static BrewUp.Persistence.Services.SalesOrderService;
 using static BrewUp.Rest.Services.SalesOrderService;
 
@@ -41,8 +41,6 @@ builder.Services.AddKeyedSingleton<IRepository, SaleRepository>("sale");
 builder.Services.AddKeyedSingleton<IRepository, WarehouseRepository>("warehouse");
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddSingleton<ISalesQueryService, SalesQueryService>();
-builder.Services.AddSingleton<IQueries<SalesOrder>, SalesOrderQueries>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<SetAvailabilityValidator>();
 builder.Services.AddSingleton<ValidationHandler>();
@@ -62,13 +60,17 @@ var handleCreateSalesOrder =
             InsertSalesOrder,
             GetAvailabilityById));
 
+var handleGetOrders =
+    HandleGetOrders(GetSalesOrders(logger, SalesOrderQueries.GetSalesOrderByFilter));
+
 var salesGroup = app.MapGroup("/v1/sales/").WithTags("Sales");
 salesGroup.MapPost("/", handleCreateSalesOrder)
     .Produces(StatusCodes.Status400BadRequest)
     .Produces(StatusCodes.Status201Created)
     .WithName("CreateSalesOrder");
 
-salesGroup.MapGet("/", HandleGetOrders)
+
+salesGroup.MapGet("/", handleGetOrders)
     .Produces(StatusCodes.Status404NotFound)
     .Produces(StatusCodes.Status200OK)
     .WithName("GetSalesOrders");
