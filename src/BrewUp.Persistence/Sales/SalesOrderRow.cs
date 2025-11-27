@@ -1,6 +1,6 @@
 ﻿using BrewUp.Shared.CustomTypes;
 
-namespace BrewUp.Persistence.Entities.Sales;
+namespace BrewUp.Persistence.Sales;
 
 public class SalesOrderRow
 {

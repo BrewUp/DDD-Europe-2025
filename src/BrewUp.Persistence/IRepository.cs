@@ -1,6 +1,6 @@
 ﻿using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Services;
+namespace BrewUp.Persistence;
 
 public interface IRepository
 {

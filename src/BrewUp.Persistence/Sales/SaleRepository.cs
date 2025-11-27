@@ -1,7 +1,6 @@
-﻿using BrewUp.Persistence.Services;
-using BrewUp.Shared.Entities;
+﻿using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Entities.Sales;
+namespace BrewUp.Persistence.Sales;
 
 public class SaleRepository : IRepository
 {

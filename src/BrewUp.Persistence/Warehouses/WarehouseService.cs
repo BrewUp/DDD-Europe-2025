@@ -1,11 +1,10 @@
 ﻿using BrewUp.Shared.CustomTypes;
-using static BrewUp.Persistence.Entities.Warehouses.Availability;
-using Availability = BrewUp.Shared.Entities.Availability;
+using static BrewUp.Persistence.Warehouses.Availability;
 
-namespace BrewUp.Persistence.Services;
+namespace BrewUp.Persistence.Warehouses;
 
-public delegate Task InsertAvailability(Availability availability);
-public delegate BrewUp.Persistence.Entities.Warehouses.Availability CreateAvailability(Guid beerId, string beerName, Quantity quantity);
+public delegate Task InsertAvailability(Shared.Entities.Availability availability);
+public delegate Availability CreateAvailability(Guid beerId, string beerName, Quantity quantity);
 
 public delegate Task UpdateAvailabilityDueToProductionOrder(
     Guid beerId,

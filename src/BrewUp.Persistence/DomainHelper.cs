@@ -1,4 +1,5 @@
-﻿using BrewUp.Persistence.Entities.Sales;
+﻿using BrewUp.Persistence.Sales;
+using BrewUp.Persistence.Warehouses;
 using BrewUp.Shared.Contracts;
 
 namespace BrewUp.Persistence;
@@ -15,7 +16,7 @@ public static class DomainHelper
         return json.Select(r => SalesOrderRow.CreateSalesOrderRow(r.BeerId, r.BeerName, r.Quantity, r.Price));
     }
 
-    internal static Shared.Entities.SalesOrder MapToSharedDto(this Entities.Sales.SalesOrder salesOrder)
+    internal static Shared.Entities.SalesOrder MapToSharedDto(this SalesOrder salesOrder)
     {
         return Shared.Entities.SalesOrder.Create(salesOrder.SalesOrderId, salesOrder.SalesOrderNumber,
             salesOrder.OrderDate, salesOrder.CustomerId, salesOrder.CustomerName,
@@ -28,7 +29,7 @@ public static class DomainHelper
             }));
     }
 
-    internal static Shared.Entities.Availability MapToSharedDto(this Entities.Warehouses.Availability availability)
+    internal static Shared.Entities.Availability MapToSharedDto(this Availability availability)
     {
         return Shared.Entities.Availability.Create(availability.BeerId, availability.BeerName, availability.Quantity);
     }

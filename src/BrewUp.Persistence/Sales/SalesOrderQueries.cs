@@ -1,11 +1,10 @@
 ﻿using System.Linq.Expressions;
-using BrewUp.Persistence.Services;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Sales.Queries;
+namespace BrewUp.Persistence.Sales;
 
-public delegate Task<PagedResult<SalesOrder>> GetSalesOrderByFilter(
-    Expression<Func<SalesOrder, bool>>? query,
+public delegate Task<PagedResult<Shared.Entities.SalesOrder>> GetSalesOrderByFilter(
+    Expression<Func<Shared.Entities.SalesOrder, bool>>? query,
     int page,
     int pageSize);
 
@@ -20,10 +19,10 @@ public static class SalesOrderQueries
 
         var files = Directory.GetFiles(IRepository.DbRoot, "sales-entity-*.json");
 
-        List<Task<SalesOrder>> allOrdersT = files.Select(async filePath =>
+        List<Task<Shared.Entities.SalesOrder>> allOrdersT = files.Select(async filePath =>
         {
             string json = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
-            var order = json.Deserialized<SalesOrder>();
+            var order = json.Deserialized<Shared.Entities.SalesOrder>();
             return order;
         }).ToList();
 
@@ -40,6 +39,6 @@ public static class SalesOrderQueries
             .Take(pageSize)
             .ToList();
 
-        return new PagedResult<SalesOrder>(results, page, pageSize, count);
+        return new PagedResult<Shared.Entities.SalesOrder>(results, page, pageSize, count);
     };
 }

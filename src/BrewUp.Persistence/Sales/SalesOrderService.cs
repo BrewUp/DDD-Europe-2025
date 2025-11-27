@@ -1,9 +1,8 @@
-﻿using BrewUp.Persistence.Entities.Sales;
-using BrewUp.Shared.Contracts;
-using Availability = BrewUp.Shared.Entities.Availability;
+﻿using BrewUp.Shared.Contracts;
 using BrewUp.Shared.CustomTypes;
+using Availability = BrewUp.Shared.Entities.Availability;
 
-namespace BrewUp.Persistence.Services;
+namespace BrewUp.Persistence.Sales;
 
 public delegate Task CreateSalesOrderStatic(
     SalesOrderId salesOrderId,

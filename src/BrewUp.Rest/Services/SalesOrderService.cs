@@ -1,5 +1,4 @@
-﻿using BrewUp.Persistence.Sales.Services;
-using BrewUp.Persistence.Services;
+﻿using BrewUp.Persistence.Sales;
 using BrewUp.Shared.Contracts;
 using BrewUp.Shared.CustomTypes;
 using BrewUp.Shared.Entities;
