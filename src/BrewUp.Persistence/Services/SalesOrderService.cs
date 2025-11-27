@@ -1,28 +1,23 @@
 ﻿using BrewUp.Persistence.Entities.Sales;
 using BrewUp.Shared.Contracts;
-using BrewUp.Shared.CustomTypes;
-using Microsoft.Extensions.DependencyInjection;
 using Availability = BrewUp.Shared.Entities.Availability;
+using BrewUp.Shared.CustomTypes;
 
 namespace BrewUp.Persistence.Services;
 
-public sealed class SalesOrderService(
-    [FromKeyedServices("sale")] IRepository saleRepository,
-    [FromKeyedServices("warehouse")] IRepository warehouseRepository) : ISalesOrderService
-{
-    public async Task CreateSalesOrderAsync(
-        SalesOrderId salesOrderId,
-        SalesOrderNumber salesOrderNumber,
-        OrderDate orderDate,
-        CustomerId customerId,
-        CustomerName customerName,
-        IEnumerable<SalesOrderRowJson> rows)
-    {
-        await CreateSalesOrder
-            (saleRepository.InsertAsync, warehouseRepository.GetByIdAsync<Availability>)
-            (salesOrderId, salesOrderNumber, orderDate, customerId, customerName, rows);
-    }
+public delegate Task CreateSalesOrderStatic(
+    SalesOrderId salesOrderId,
+    SalesOrderNumber salesOrderNumber,
+    OrderDate orderDate,
+    CustomerId customerId,
+    CustomerName customerName,
+    IEnumerable<SalesOrderRowJson> rows);
 
+public delegate Task InsertAsync(Shared.Entities.SalesOrder salesOrder);
+public delegate Task<Availability> GetWareHouse(string id);
+
+public static class SalesOrderService
+{
     public static CreateSalesOrderStatic CreateSalesOrder(
         InsertAsync insertSalesOrder,
         GetWareHouse getWareHouse) =>
@@ -46,6 +41,3 @@ public sealed class SalesOrderService(
             await insertSalesOrder(aggregate.MapToSharedDto());
         };
 }
-
-public delegate Task InsertAsync(Shared.Entities.SalesOrder salesOrder);
-public delegate Task<Availability> GetWareHouse(string id);

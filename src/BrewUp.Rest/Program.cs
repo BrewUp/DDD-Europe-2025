@@ -16,7 +16,6 @@ using static BrewUp.Infrastructure.TextBasedDb.SaleRepositoryStatic;
 using static BrewUp.Infrastructure.TextBasedDb.WarehouseRepositoryStatic;
 using static BrewUp.Persistence.Services.SalesOrderService;
 using static BrewUp.Rest.Services.SalesOrderService;
-using SalesOrderService = BrewUp.Persistence.Services.SalesOrderService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +25,7 @@ var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 builder.Logging.AddSerilog(logger);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc(
-    "v1", new OpenApiInfo()
+    "v1", new OpenApiInfo
     {
         Description = "BrewUp",
         Title = "BrewUp API",
@@ -42,7 +41,6 @@ builder.Services.AddKeyedSingleton<IRepository, SaleRepository>("sale");
 builder.Services.AddKeyedSingleton<IRepository, WarehouseRepository>("warehouse");
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddSingleton<ISalesOrderService, SalesOrderService>();
 builder.Services.AddSingleton<ISalesQueryService, SalesQueryService>();
 builder.Services.AddSingleton<IQueries<SalesOrder>, SalesOrderQueries>();
 

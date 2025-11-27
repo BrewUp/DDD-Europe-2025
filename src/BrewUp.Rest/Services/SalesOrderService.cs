@@ -9,13 +9,6 @@ namespace BrewUp.Rest.Services;
 
 public delegate Task<Results<Created, NotFound>> HandleCreateSalesOrder(SalesOrderJson body);
 
-public delegate Task CreateSalesOrder(
-    SalesOrderId salesOrderId,
-    SalesOrderNumber salesOrderNumber,
-    OrderDate orderDate,
-    CustomerId customerId,
-    CustomerName customerName,
-    IEnumerable<SalesOrderRowJson> salesOrders);
 
 public static class SalesOrderService
 {
