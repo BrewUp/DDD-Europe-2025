@@ -5,8 +5,6 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using static BrewUp.Rest.Services.SalesOrderService;
-using static BrewUp.Rest.Services.WarehousesService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,20 +33,12 @@ builder.Services.AddValidatorsFromAssemblyContaining<SetAvailabilityValidator>()
 builder.Services.AddSingleton<ValidationHandler>();
 
 var app = builder.Build();
-
 app.UseCors("CorsPolicy");
 
-//Sales
 var compositionRoot = CompositionRoot.Build(logger);
+app.DefineRoutes(compositionRoot);
 
-var salesGroup = app.MapGroup("/v1/sales/");
-salesGroup.MapPost("/", HandleCreateSalesOrder(compositionRoot.CreateSalesOrderStatic));
-salesGroup.MapGet("/", HandleGetOrders(compositionRoot.GetSalesOrders));
 
-var warehousesGroup = app.MapGroup("/v1/warehouses/").WithTags("Warehouses");
-warehousesGroup.MapPost("/availabilities", HandleSetAvailabilities(compositionRoot.UpdateAvailabilityDueToProductionOrder));
-
-// Configure the HTTP request pipeline.
 app.UseSwagger(s => { s.RouteTemplate = "documentation/{documentName}/documentation.json"; });
 app.UseSwaggerUI(s =>
 {
