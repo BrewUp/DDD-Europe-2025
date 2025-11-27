@@ -1,7 +1,6 @@
 using BrewUp.Persistence;
 using BrewUp.Rest;
 using Microsoft.OpenApi.Models;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +21,7 @@ builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc(
 var app = builder.Build();
 app.UseCors("CorsPolicy");
 
-var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).Enrich.FromLogContext().CreateLogger();
+var logger = Logging.Build(builder.Configuration);
 var compositionRoot = CompositionRoot.Build(logger);
 app.DefineRoutes(compositionRoot);
 
