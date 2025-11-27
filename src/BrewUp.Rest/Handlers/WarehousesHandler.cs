@@ -6,9 +6,9 @@ namespace BrewUp.Rest.Handlers;
 
 public delegate Task<Ok> HandleSetAvailabilities(SetAvailabilityJson body);
 
-public static class WarehousesHandler
+internal static class WarehousesHandler
 {
-    public static HandleSetAvailabilities HandleSetAvailabilities(UpdateAvailabilityDueToProductionOrder updateAvailabilityDueToProductionOrder) =>
+    internal static HandleSetAvailabilities HandleSetAvailabilities(UpdateAvailabilityDueToProductionOrder updateAvailabilityDueToProductionOrder) =>
         async body =>
         {
             await updateAvailabilityDueToProductionOrder(new Guid(body.BeerId), body.BeerName, body.Quantity);

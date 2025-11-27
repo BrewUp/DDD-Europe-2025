@@ -10,9 +10,9 @@ public delegate Task<Results<Created, NotFound>> HandleCreateSalesOrder(SalesOrd
 
 public delegate Task<Results<Ok<PagedResult<SalesOrderJson>>, NotFound>> HandleGetOrders();
 
-public static class SalesOrderHandler
+internal static class SalesOrderHandler
 {
-    public static HandleCreateSalesOrder HandleCreateSalesOrder(CreateSalesOrderStatic salesOrderStatic) =>
+    internal static HandleCreateSalesOrder HandleCreateSalesOrder(CreateSalesOrderStatic salesOrderStatic) =>
         async body =>
         {
             await salesOrderStatic(
@@ -27,7 +27,7 @@ public static class SalesOrderHandler
         };
 
 
-    public static HandleGetOrders HandleGetOrders(GetSalesOrders getGetSalesOrders) => async () =>
+    internal static HandleGetOrders HandleGetOrders(GetSalesOrders getGetSalesOrders) => async () =>
     {
         var orders = await getGetSalesOrders(0, 30);
         return TypedResults.Ok(orders);
