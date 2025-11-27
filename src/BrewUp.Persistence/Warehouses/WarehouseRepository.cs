@@ -1,6 +1,6 @@
 ﻿namespace BrewUp.Persistence.Warehouses;
 
-internal static class WarehouseRepositoryStatic
+internal static class WarehouseRepository
 {
     private static string FileName(string id) => $"{FileBasedDbConfiguration.DbRoot}/warehouse-entity-{id}.json";
 

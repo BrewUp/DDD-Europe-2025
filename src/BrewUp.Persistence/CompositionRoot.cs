@@ -37,10 +37,10 @@ public record CompositionRoot(
 
             CreateSalesOrderStatic:
                 SalesOrderService.CreateSalesOrder(
-                    SaleRepositoryStatic.InsertSalesOrder,
-                    WarehouseRepositoryStatic.GetAvailabilityById),
+                    SaleRepository.InsertSalesOrder,
+                    WarehouseRepository.GetAvailabilityById),
 
             UpdateAvailabilityDueToProductionOrder:
                 WarehouseService.UpdateAvailabilityDueToProductionOrder(
-                    WarehouseRepositoryStatic.InsertAvailability));
+                    WarehouseRepository.InsertAvailability));
 }
