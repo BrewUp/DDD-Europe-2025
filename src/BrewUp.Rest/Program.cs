@@ -60,7 +60,7 @@ var handleCreateSalesOrder =
     HandleCreateSalesOrder(
         CreateSalesOrder(
             InsertSalesOrder,
-            GetByIdAsync));
+            GetAvailabilityById));
 
 var salesGroup = app.MapGroup("/v1/sales/").WithTags("Sales");
 salesGroup.MapPost("/", handleCreateSalesOrder)

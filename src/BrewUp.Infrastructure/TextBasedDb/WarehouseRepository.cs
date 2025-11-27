@@ -33,7 +33,7 @@ public static class WarehouseRepositoryStatic
 {
     internal static string FileName(string id) => $"{IRepository.DbRoot}/warehouse-entity-{id}.json";
 
-    public static async Task<Availability> GetByIdAsync(string id)
+    public static async Task<Availability> GetAvailabilityById(string id)
     {
         if (!File.Exists(FileName(id))) return await Task.FromResult<Availability>(null);
 
