@@ -1,12 +1,6 @@
 using BrewUp.Infrastructure.TextBasedDb;
-using BrewUp.Persistence;
-using BrewUp.Persistence.Sales.Services;
-using BrewUp.Persistence.Services;
-using BrewUp.Persistence.Warehouses.Queries;
-using BrewUp.Persistence.Warehouses.Services;
 using BrewUp.Rest;
 using BrewUp.Rest.Validators.Warehouses;
-using BrewUp.Shared.Entities;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
@@ -34,15 +28,11 @@ builder.Services.AddSwaggerGen(setup => setup.SwaggerDoc(
     }));
 
 builder.Services.AddFileBasedDb();
-builder.Services.AddKeyedSingleton<IRepository, SaleRepository>("sale");
-builder.Services.AddKeyedSingleton<IRepository, WarehouseRepository>("warehouse");
 
 builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddValidatorsFromAssemblyContaining<SetAvailabilityValidator>();
 builder.Services.AddSingleton<ValidationHandler>();
-builder.Services.AddSingleton<IAvailabilityQueryService, AvailabilityQueryService>();
-builder.Services.AddSingleton<IQueries<Availability>, AvailabilityQueries>();
 
 var app = builder.Build();
 
