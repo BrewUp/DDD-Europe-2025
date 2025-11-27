@@ -1,15 +1,18 @@
-﻿using BrewUp.Shared.Contracts;
+﻿using System.Linq.Expressions;
+using BrewUp.Shared.Contracts;
 using BrewUp.Shared.Entities;
 using Serilog.Core;
 
 namespace BrewUp.Persistence.Sales;
 
-public delegate Task<PagedResult<SalesOrderJson>> GetSalesOrders(int page, int pageSize);
+internal delegate Task<PagedResult<Shared.Entities.SalesOrder>> GetSalesOrderByFilter(
+    Expression<Func<Shared.Entities.SalesOrder, bool>>? query,
+    int page,
+    int pageSize);
 
-public static class SalesQueryService
+internal static class SalesQueryService
 {
-
-    public static GetSalesOrders GetSalesOrders(Logger logger, GetSalesOrderByFilter getSalesOrderByFilter) => async (page, pageSize) =>
+    internal static GetSalesOrders GetSalesOrders(Logger logger, GetSalesOrderByFilter getSalesOrderByFilter) => async (page, pageSize) =>
     {
         try
         {

@@ -3,17 +3,18 @@ using static BrewUp.Persistence.Warehouses.Availability;
 
 namespace BrewUp.Persistence.Warehouses;
 
-public delegate Task InsertAvailability(Shared.Entities.Availability availability);
-public delegate Availability CreateAvailability(Guid beerId, string beerName, Quantity quantity);
+internal delegate Task InsertAvailability(Shared.Entities.Availability availability);
 
-public delegate Task UpdateAvailabilityDueToProductionOrder(
+internal delegate Availability CreateAvailability(Guid beerId, string beerName, Quantity quantity);
+
+internal delegate Task UpdateAvailabilityDueToProductionOrder(
     Guid beerId,
     string beerName,
     Quantity quantity);
 
-public static class WarehouseService
+internal static class WarehouseService
 {
-    public static UpdateAvailabilityDueToProductionOrder UpdateAvailabilityDueToProductionOrder(
+    internal static UpdateAvailabilityDueToProductionOrder UpdateAvailabilityDueToProductionOrder(
         InsertAvailability insertAvailability) =>
         async (
             beerId,

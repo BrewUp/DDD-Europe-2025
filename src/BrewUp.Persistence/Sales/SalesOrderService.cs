@@ -12,12 +12,13 @@ public delegate Task CreateSalesOrderStatic(
     CustomerName customerName,
     IEnumerable<SalesOrderRowJson> rows);
 
-public delegate Task InsertAsync(Shared.Entities.SalesOrder salesOrder);
-public delegate Task<Availability> GetWareHouse(string id);
+internal delegate Task InsertAsync(Shared.Entities.SalesOrder salesOrder);
 
-public static class SalesOrderService
+internal delegate Task<Availability> GetWareHouse(string id);
+
+internal static class SalesOrderService
 {
-    public static CreateSalesOrderStatic CreateSalesOrder(
+    internal static CreateSalesOrderStatic CreateSalesOrder(
         InsertAsync insertSalesOrder,
         GetWareHouse getWareHouse) =>
         async (

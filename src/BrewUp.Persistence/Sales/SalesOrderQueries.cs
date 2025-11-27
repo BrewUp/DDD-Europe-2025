@@ -1,17 +1,10 @@
-﻿using System.Linq.Expressions;
-using BrewUp.Shared.Entities;
+﻿using BrewUp.Shared.Entities;
 
 namespace BrewUp.Persistence.Sales;
 
-public delegate Task<PagedResult<Shared.Entities.SalesOrder>> GetSalesOrderByFilter(
-    Expression<Func<Shared.Entities.SalesOrder, bool>>? query,
-    int page,
-    int pageSize);
-
-
-public static class SalesOrderQueries
+internal static class SalesOrderQueries
 {
-    public static GetSalesOrderByFilter GetSalesOrderByFilter =
+    internal static readonly GetSalesOrderByFilter GetSalesOrderByFilter =
         async (query, page, pageSize) =>
     {
         if (--page < 0)

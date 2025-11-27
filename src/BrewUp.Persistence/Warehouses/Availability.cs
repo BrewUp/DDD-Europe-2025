@@ -13,7 +13,7 @@ public class Availability : AggregateRoot
     {
     }
 
-    public static CreateAvailability CreateAvailability =
+    internal static CreateAvailability CreateAvailability =
         (beerId, beerName, quantity) => new Availability(beerId, beerName, quantity);
 
     private Availability(Guid beerId, string beerName, Quantity quantity)
