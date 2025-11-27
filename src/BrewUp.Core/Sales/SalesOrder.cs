@@ -2,7 +2,7 @@
 using BrewUp.Shared.CustomTypes;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Sales;
+namespace BrewUp.Core.Sales;
 
 public class SalesOrder : AggregateRoot
 {

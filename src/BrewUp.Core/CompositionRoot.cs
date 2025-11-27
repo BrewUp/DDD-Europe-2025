@@ -1,11 +1,11 @@
-using BrewUp.Persistence.Sales;
-using BrewUp.Persistence.Warehouses;
+using BrewUp.Core.Sales;
+using BrewUp.Core.Warehouses;
 using Serilog.Core;
 using BrewUp.Shared.Contracts;
 using BrewUp.Shared.CustomTypes;
 using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence;
+namespace BrewUp.Core;
 
 public delegate Task<PagedResult<SalesOrderJson>> GetSalesOrders(int page, int pageSize);
 

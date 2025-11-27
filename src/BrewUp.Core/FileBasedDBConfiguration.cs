@@ -1,4 +1,4 @@
-﻿namespace BrewUp.Persistence;
+﻿namespace BrewUp.Core;
 
 internal static class FileBasedDbConfiguration
 {

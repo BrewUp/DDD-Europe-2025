@@ -1,7 +1,7 @@
 ﻿using BrewUp.Shared.CustomTypes;
-using static BrewUp.Persistence.Warehouses.Availability;
+using static BrewUp.Core.Warehouses.Availability;
 
-namespace BrewUp.Persistence.Warehouses;
+namespace BrewUp.Core.Warehouses;
 
 internal delegate Task InsertAvailability(Shared.Entities.Availability availability);
 

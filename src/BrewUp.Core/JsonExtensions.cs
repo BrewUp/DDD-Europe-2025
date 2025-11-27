@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace BrewUp.Persistence;
+namespace BrewUp.Core;
 
 public static class JsonExtensions
 {

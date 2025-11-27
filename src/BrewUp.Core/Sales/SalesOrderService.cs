@@ -2,7 +2,7 @@
 using BrewUp.Shared.CustomTypes;
 using Availability = BrewUp.Shared.Entities.Availability;
 
-namespace BrewUp.Persistence.Sales;
+namespace BrewUp.Core.Sales;
 
 internal delegate Task InsertAsync(Shared.Entities.SalesOrder salesOrder);
 

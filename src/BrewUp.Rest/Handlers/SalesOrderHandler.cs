@@ -1,4 +1,4 @@
-﻿using BrewUp.Persistence;
+﻿using BrewUp.Core;
 using BrewUp.Shared.Contracts;
 using BrewUp.Shared.CustomTypes;
 using BrewUp.Shared.Entities;

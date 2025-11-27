@@ -1,4 +1,4 @@
-﻿namespace BrewUp.Persistence.Warehouses;
+﻿namespace BrewUp.Core.Warehouses;
 
 internal static class WarehouseRepository
 {

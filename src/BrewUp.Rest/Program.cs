@@ -1,4 +1,4 @@
-using BrewUp.Persistence;
+using BrewUp.Core;
 using BrewUp.Rest;
 using Microsoft.OpenApi.Models;
 

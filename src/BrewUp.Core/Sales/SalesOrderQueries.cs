@@ -1,6 +1,6 @@
 ﻿using BrewUp.Shared.Entities;
 
-namespace BrewUp.Persistence.Sales;
+namespace BrewUp.Core.Sales;
 
 internal static class SalesOrderQueries
 {

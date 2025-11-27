@@ -1,8 +1,8 @@
-﻿using BrewUp.Persistence.Sales;
-using BrewUp.Persistence.Warehouses;
+﻿using BrewUp.Core.Sales;
+using BrewUp.Core.Warehouses;
 using BrewUp.Shared.Contracts;
 
-namespace BrewUp.Persistence;
+namespace BrewUp.Core;
 
 public static class DomainHelper
 {

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BrewUp.Persistence\BrewUp.Persistence.csproj" />
+    <ProjectReference Include="..\BrewUp.Core\BrewUp.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

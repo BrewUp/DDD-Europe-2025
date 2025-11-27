@@ -3,7 +3,7 @@ using BrewUp.Shared.Contracts;
 using BrewUp.Shared.Entities;
 using Serilog.Core;
 
-namespace BrewUp.Persistence.Sales;
+namespace BrewUp.Core.Sales;
 
 internal delegate Task<PagedResult<Shared.Entities.SalesOrder>> GetSalesOrderByFilter(
     Expression<Func<Shared.Entities.SalesOrder, bool>>? query,
