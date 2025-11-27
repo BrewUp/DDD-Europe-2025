@@ -1,23 +1,18 @@
 using BrewUp.Infrastructure.TextBasedDb;
 using BrewUp.Persistence;
-using BrewUp.Persistence.Sales.Queries;
+using BrewUp.Persistence.Sales.Services;
 using BrewUp.Persistence.Services;
 using BrewUp.Persistence.Warehouses.Queries;
 using BrewUp.Persistence.Warehouses.Services;
-using BrewUp.Rest.Services;
+using BrewUp.Rest;
 using BrewUp.Rest.Validators.Warehouses;
-using BrewUp.Shared.Contracts;
 using BrewUp.Shared.Entities;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using static BrewUp.Infrastructure.TextBasedDb.SaleRepositoryStatic;
-using static BrewUp.Infrastructure.TextBasedDb.WarehouseRepositoryStatic;
-using static BrewUp.Persistence.Sales.Services.SalesQueryService;
-using static BrewUp.Persistence.Services.SalesOrderService;
 using static BrewUp.Rest.Services.SalesOrderService;
+using static BrewUp.Rest.Services.WarehousesService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,29 +49,14 @@ var app = builder.Build();
 app.UseCors("CorsPolicy");
 
 //Sales
-
-var handleCreateSalesOrder =
-    HandleCreateSalesOrder(
-        CreateSalesOrder(
-            InsertSalesOrder,
-            GetAvailabilityById));
-
-var handleGetOrders =
-    HandleGetOrders(
-        GetSalesOrders(logger, SalesOrderQueries.GetSalesOrderByFilter));
+var compositionRoot = CompositionRoot.Build(logger);
 
 var salesGroup = app.MapGroup("/v1/sales/");
-salesGroup.MapPost("/", handleCreateSalesOrder);
-salesGroup.MapGet("/", handleGetOrders);
+salesGroup.MapPost("/", HandleCreateSalesOrder(compositionRoot.CreateSalesOrderStatic));
+salesGroup.MapGet("/", HandleGetOrders(compositionRoot.GetSalesOrders));
 
-//Warehouses
 var warehousesGroup = app.MapGroup("/v1/warehouses/").WithTags("Warehouses");
-
-
-var handleSetAvailabilities = WarehousesService.HandleSetAvailabilities(WarehouseService.UpdateAvailabilityDueToProductionOrder(
-    WarehouseRepositoryStatic.InsertAvailability));
-
-warehousesGroup.MapPost("/availabilities", handleSetAvailabilities);
+warehousesGroup.MapPost("/availabilities", HandleSetAvailabilities(compositionRoot.UpdateAvailabilityDueToProductionOrder));
 
 // Configure the HTTP request pipeline.
 app.UseSwagger(s => { s.RouteTemplate = "documentation/{documentName}/documentation.json"; });
