@@ -1,13 +1,27 @@
 ﻿using BrewUp.Shared.CustomTypes;
-using Microsoft.Extensions.DependencyInjection;
+using static BrewUp.Persistence.Entities.Warehouses.Availability;
+using Availability = BrewUp.Shared.Entities.Availability;
 
 namespace BrewUp.Persistence.Services;
 
-public sealed class WarehouseService([FromKeyedServices("warehouse")] IRepository repository) : IWarehouseService
+public delegate Task InsertAvailability(Availability availability);
+public delegate BrewUp.Persistence.Entities.Warehouses.Availability CreateAvailability(Guid beerId, string beerName, Quantity quantity);
+
+public delegate Task UpdateAvailabilityDueToProductionOrder(
+    Guid beerId,
+    string beerName,
+    Quantity quantity);
+
+public static class WarehouseService
 {
-    public async Task UpdateAvailabilityDueToProductionOrderAsync(Guid beerId, string beerName, Quantity quantity)
-    {
-        var aggregate = Entities.Warehouses.Availability.CreateAvailability(beerId, beerName, quantity);
-        await repository.InsertAsync(aggregate.MapToSharedDto());
-    }
+    public static UpdateAvailabilityDueToProductionOrder UpdateAvailabilityDueToProductionOrder(
+        InsertAvailability insertAvailability) =>
+        async (
+            beerId,
+            beerName,
+            quantity) =>
+        {
+            var aggregate = CreateAvailability(beerId, beerName, quantity);
+            await insertAvailability(aggregate.MapToSharedDto());
+        };
 }

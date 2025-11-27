@@ -29,6 +29,7 @@ public class WarehouseRepository : IRepository
     }
 }
 
+
 public static class WarehouseRepositoryStatic
 {
     internal static string FileName(string id) => $"{IRepository.DbRoot}/warehouse-entity-{id}.json";
@@ -39,4 +40,9 @@ public static class WarehouseRepositoryStatic
 
         return (await File.ReadAllTextAsync(FileName(id))).Deserialized<Availability>();
     }
+
+    public static InsertAvailability InsertAvailability = async availability =>
+    {
+        await File.WriteAllTextAsync(FileName(availability.Id), availability.Serialized());
+    };
 }

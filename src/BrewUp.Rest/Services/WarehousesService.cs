@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BrewUp.Rest.Services;
 
+public delegate Task<Ok> HandleSetAvailabilities(SetAvailabilityJson body);
+
 public static class WarehousesService
 {
-    public static async Task<Ok> HandleSetAvailabilities(SetAvailabilityJson body, IWarehouseService warehousesDomainService)
-    {
-        await warehousesDomainService.UpdateAvailabilityDueToProductionOrderAsync(new Guid(body.BeerId), body.BeerName, body.Quantity);
-        return TypedResults.Ok();
-    }
+    public static HandleSetAvailabilities HandleSetAvailabilities(UpdateAvailabilityDueToProductionOrder updateAvailabilityDueToProductionOrder) =>
+        async body =>
+        {
+            await updateAvailabilityDueToProductionOrder(new Guid(body.BeerId), body.BeerName, body.Quantity);
+            return TypedResults.Ok();
+        };
 }

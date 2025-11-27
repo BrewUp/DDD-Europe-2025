@@ -1,4 +1,5 @@
-﻿using BrewUp.Shared.CustomTypes;
+﻿using BrewUp.Persistence.Services;
+using BrewUp.Shared.CustomTypes;
 using BrewUp.Shared.Entities;
 
 namespace BrewUp.Persistence.Entities.Warehouses;
@@ -13,10 +14,8 @@ public class Availability : AggregateRoot
     {
     }
 
-    internal static Availability CreateAvailability(Guid beerId, string beerName, Quantity quantity)
-    {
-        return new Availability(beerId, beerName, quantity);
-    }
+    public static CreateAvailability CreateAvailability =
+        (beerId, beerName, quantity) => new Availability(beerId, beerName, quantity);
 
     private Availability(Guid beerId, string beerName, Quantity quantity)
     {

@@ -6,9 +6,11 @@ using BrewUp.Persistence.Warehouses.Queries;
 using BrewUp.Persistence.Warehouses.Services;
 using BrewUp.Rest.Services;
 using BrewUp.Rest.Validators.Warehouses;
+using BrewUp.Shared.Contracts;
 using BrewUp.Shared.Entities;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using static BrewUp.Infrastructure.TextBasedDb.SaleRepositoryStatic;
@@ -44,7 +46,6 @@ builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddValidatorsFromAssemblyContaining<SetAvailabilityValidator>();
 builder.Services.AddSingleton<ValidationHandler>();
-builder.Services.AddSingleton<IWarehouseService, WarehouseService>();
 builder.Services.AddSingleton<IAvailabilityQueryService, AvailabilityQueryService>();
 builder.Services.AddSingleton<IQueries<Availability>, AvailabilityQueries>();
 
@@ -70,10 +71,12 @@ salesGroup.MapGet("/", handleGetOrders);
 
 //Warehouses
 var warehousesGroup = app.MapGroup("/v1/warehouses/").WithTags("Warehouses");
-warehousesGroup.MapPost("/availabilities", WarehousesService.HandleSetAvailabilities)
-    .Produces(StatusCodes.Status400BadRequest)
-    .Produces(StatusCodes.Status200OK)
-    .WithName("SetAvailabilities");
+
+
+var handleSetAvailabilities = WarehousesService.HandleSetAvailabilities(WarehouseService.UpdateAvailabilityDueToProductionOrder(
+    WarehouseRepositoryStatic.InsertAvailability));
+
+warehousesGroup.MapPost("/availabilities", handleSetAvailabilities);
 
 // Configure the HTTP request pipeline.
 app.UseSwagger(s => { s.RouteTemplate = "documentation/{documentName}/documentation.json"; });
