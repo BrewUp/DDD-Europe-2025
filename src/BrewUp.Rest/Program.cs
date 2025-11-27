@@ -61,19 +61,12 @@ var handleCreateSalesOrder =
             GetAvailabilityById));
 
 var handleGetOrders =
-    HandleGetOrders(GetSalesOrders(logger, SalesOrderQueries.GetSalesOrderByFilter));
+    HandleGetOrders(
+        GetSalesOrders(logger, SalesOrderQueries.GetSalesOrderByFilter));
 
-var salesGroup = app.MapGroup("/v1/sales/").WithTags("Sales");
-salesGroup.MapPost("/", handleCreateSalesOrder)
-    .Produces(StatusCodes.Status400BadRequest)
-    .Produces(StatusCodes.Status201Created)
-    .WithName("CreateSalesOrder");
-
-
-salesGroup.MapGet("/", handleGetOrders)
-    .Produces(StatusCodes.Status404NotFound)
-    .Produces(StatusCodes.Status200OK)
-    .WithName("GetSalesOrders");
+var salesGroup = app.MapGroup("/v1/sales/");
+salesGroup.MapPost("/", handleCreateSalesOrder);
+salesGroup.MapGet("/", handleGetOrders);
 
 //Warehouses
 var warehousesGroup = app.MapGroup("/v1/warehouses/").WithTags("Warehouses");
