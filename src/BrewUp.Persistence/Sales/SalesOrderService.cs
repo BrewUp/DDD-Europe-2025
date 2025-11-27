@@ -4,14 +4,6 @@ using Availability = BrewUp.Shared.Entities.Availability;
 
 namespace BrewUp.Persistence.Sales;
 
-public delegate Task CreateSalesOrderStatic(
-    SalesOrderId salesOrderId,
-    SalesOrderNumber salesOrderNumber,
-    OrderDate orderDate,
-    CustomerId customerId,
-    CustomerName customerName,
-    IEnumerable<SalesOrderRowJson> rows);
-
 internal delegate Task InsertAsync(Shared.Entities.SalesOrder salesOrder);
 
 internal delegate Task<Availability> GetWareHouse(string id);

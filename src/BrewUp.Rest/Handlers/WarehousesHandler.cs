@@ -1,4 +1,4 @@
-﻿using BrewUp.Persistence.Warehouses;
+﻿using BrewUp.Persistence;
 using BrewUp.Shared.Contracts;
 using Microsoft.AspNetCore.Http.HttpResults;
 

@@ -7,11 +7,6 @@ internal delegate Task InsertAvailability(Shared.Entities.Availability availabil
 
 internal delegate Availability CreateAvailability(Guid beerId, string beerName, Quantity quantity);
 
-internal delegate Task UpdateAvailabilityDueToProductionOrder(
-    Guid beerId,
-    string beerName,
-    Quantity quantity);
-
 internal static class WarehouseService
 {
     internal static UpdateAvailabilityDueToProductionOrder UpdateAvailabilityDueToProductionOrder(
